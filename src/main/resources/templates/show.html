@@ -17,7 +17,7 @@
 				<th>MODIFIED_AT</th>
 			</tr>
 		</thead>
-		
+
 		<tbody>
 			<tr th:each="user : ${users}">
 				<th scope="row" th:text="${user.id}">1</th>
@@ -27,6 +27,8 @@
 				<td th:text="${user.lastname}">Otto</td>
 				<td th:text="${user.createdAt}">6</td>
 				<td th:text="${user.updatedAt}">6</td>
+				<td><a th:href="@{/toEdit(id=${user.id})}">edit</a></td>
+				<td><a th:href="@{/delete(id=${user.id})}">delete</a></td>
 			</tr>
 
 		</tbody>

@@ -38,7 +38,7 @@ public class SignUpController {
 
 	/* new user signup function */
 	@PostMapping("/signup")
-	public String addUser(@Valid @ModelAttribute User user, BindingResult bindingResult,HttpSession session) {
+	public String addUser(@Valid @ModelAttribute User user, BindingResult bindingResult, HttpSession session) {
 		System.out.println(">>>>>>>>>> in signup1");
 		System.out.println(user.toString());
 
@@ -51,7 +51,7 @@ public class SignUpController {
 		session.setAttribute("user", user);
 
 //		return "redirect:/show";
-		return "sign-up2";	
+		return "sign-up2";
 	}
 
 	/* new user signup function */
@@ -68,13 +68,13 @@ public class SignUpController {
 		session.setAttribute("user", user);
 		return "temp-confirm";
 	}
-	
+
 	@PostMapping("/confirm")
-	public String confirm(@ModelAttribute User user){
+	public String confirm(@ModelAttribute User user) {
 		System.out.println(">>>>>>>>>> in confirm");
 		System.out.println(user.toString());
 		userService.save(user);
-		
+
 		return "redirect:/show";
 	}
 
@@ -86,5 +86,26 @@ public class SignUpController {
 		model.addAttribute("users", users);
 		return "show";
 	}
+
+	/* edit part */
+	@GetMapping("/toEdit")
+	public String toEdit(Model model, Long id) {
+		User user = userService.findUserById(id);
+		model.addAttribute("user", user);
+		return "user-edit";
+	}
+
+	@PostMapping("/edit")
+	public String edit(User user) {
+		userService.edit(user);
+		return "redirect:/show";
+	}
+	
+	/* delete a user */
+	@GetMapping("/delete")
+    public String delete(Long id) {
+        userService.delete(id);
+        return "redirect:/show";
+    }
 
 }
