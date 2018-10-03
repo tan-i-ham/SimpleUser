@@ -3,6 +3,7 @@ package com.demo.controller;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
@@ -11,11 +12,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.demo.model.User;
 import com.demo.service.UserService;
 
 @Controller
+@SessionAttributes("user")
 public class SignUpController {
 	@Resource
 	UserService userService;
@@ -29,23 +32,49 @@ public class SignUpController {
 	/* SignUp page */
 	@GetMapping("/signup")
 	public String SignUp(Model model) {
-		System.out.println(">>>>>>>>>> in GET mapping method");
 		model.addAttribute("user", new User());
 		return "sign-up";
 	}
 
 	/* new user signup function */
 	@PostMapping("/signup")
-	public String addUser(@Valid @ModelAttribute User user, BindingResult bindingResult) {
-		System.out.println(">>>>>>>>>> in POST mapping method");
+	public String addUser(@Valid @ModelAttribute User user, BindingResult bindingResult,HttpSession session) {
+		System.out.println(">>>>>>>>>> in signup1");
 		System.out.println(user.toString());
 
 		// length validation not pass
 		if (bindingResult.hasErrors()) {
 			return "sign-up";
 		}
-		userService.save(user);
+//		userService.save(user);
+		/* session */
+		session.setAttribute("user", user);
 
+//		return "redirect:/show";
+		return "sign-up2";	
+	}
+
+	/* new user signup function */
+	@PostMapping("/signup2")
+	public String addUserInfo(@Valid @ModelAttribute User user, BindingResult bindingResult, HttpSession session) {
+		System.out.println(">>>>>>>>>> in signup2");
+		System.out.println(user.toString());
+
+		// length validation not pass
+		if (bindingResult.hasErrors()) {
+			return "sign-up2";
+		}
+//		userService.save(user);
+		session.setAttribute("user", user);
+		return "temp-confirm";
+	}
+	
+	@PostMapping("/confirm")
+	public String confirm(@ModelAttribute User user){
+		System.out.println(">>>>>>>>>> in confirm");
+		System.out.println(user.toString());
+		userService.save(user);
+		
 		return "redirect:/show";
 	}
 

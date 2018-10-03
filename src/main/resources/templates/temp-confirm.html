@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<h1>temporary confirm page</h1>
+<h2>to try session if is working</h2>
+
+<form method="POST" class="register-form" id="register-form"
+							action="#" th:action="@{/confirm}">
+<h3>id</h3>
+<!-- <p th:text="${session.user.id}"></p> -->
+<input type="hidden" value="${session.user.id}"/>
+<h3>username</h3><input type="hidden" value="${session.user.username}"/>
+<p th:text="${session.user.username}"></p>
+<h3>pass</h3><input type="hidden" value="${session.user.password}"/>
+<p th:text="${session.user.password}"></p>
+<h3>firstname</h3><input type="hidden" value="${session.user.firstname}"/>
+<p th:text="${session.user.firstname}"></p> 
+<h3>lastname</h3><input type="hidden" value="${session.user.lastnaem}"/>
+<p th:text="${session.user.lastname}"></p>
+
+<input type="submit" value="save"/>
+</form>
+
+</body>
+</html>
