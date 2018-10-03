@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<table>
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>USERNAME</th>
+				<th>PASSWORD</th>
+				<th>CREATE_AT</th>
+				<th>MODIFIED_AT</th>
+			</tr>
+		</thead>
+		
+		<tbody>
+			<tr th:each="user : ${users}">
+				<th scope="row" th:text="${user.id}">1</th>
+				<td th:text="${user.username}">neo</td>
+				<td th:text="${user.password}">Otto</td>
+				<td th:text="${user.createdAt}">6</td>
+				<td th:text="${user.updatedAt}">6</td>
+			</tr>
+
+		</tbody>
+
+	</table>
+</body>
+</html>
