@@ -46,14 +46,16 @@ public class SignUpController {
 		if (bindingResult.hasErrors()) {
 			return "sign-up";
 		}
-//		userService.save(user);
 		/* session */
 		session.setAttribute("user", user);
 
-//		return "redirect:/show";
 		return "sign-up2";
 	}
-
+	
+	@GetMapping("/signup2")
+	public String redirectfromConfirm(@Valid @ModelAttribute User user) {
+		return "sign-up2";
+	}
 	/* new user signup page 2 function */
 	@PostMapping("/signup2")
 	public String toSignUp2(@Valid @ModelAttribute User user, BindingResult bindingResult, HttpSession session) {
@@ -69,19 +71,22 @@ public class SignUpController {
 		return "temp-confirm";
 	}
 
-	/* confirm page */
-	@PostMapping("/confirm")
+	/* confirm */
+	@PostMapping(value = "/confirm", params = "save")
 	public String confirm(@ModelAttribute User user) {
 		System.out.println(">>>>>>>>>> in confirm");
 		System.out.println(user.toString());
-		
+
 		// when user confirm the data is right,
 		// then write into DB
 		userService.save(user);
-		
-		// if click back
-
 		return "redirect:/show";
+	}
+	/* confirm click back */
+	@PostMapping(value = "/confirm", params = "back-edit")
+	public String confirmBackToEdit(@ModelAttribute User user) {
+		System.out.println(">>>>>>>>>> BACK TO SIGN UP2 TO EDIT");
+		return "redirect:/signup2";
 	}
 
 	/* list all the user */
@@ -89,17 +94,17 @@ public class SignUpController {
 	public String showAll(Model model) {
 		// get data from db
 		List<User> users = userService.getUserList();
-		// set the attribute name 
+		// set the attribute name
 		// let the thymeleaf know which data it is
 		model.addAttribute("users", users);
 		return "show";
 	}
 
 	/* edit part */
-	@GetMapping("/toEdit")
+	@GetMapping("/{id}/toEdit")
 	public String toEdit(Model model, Long id) {
 		User user = userService.findUserById(id);
-		model.addAttribute("user", user);// the attribute name used in html in thymeleaf 
+		model.addAttribute("user", user);// the attribute name used in html in thymeleaf
 		return "user-edit";
 	}
 
@@ -108,12 +113,12 @@ public class SignUpController {
 		userService.edit(user);
 		return "redirect:/show";
 	}
-	
+
 	/* delete a user */
 	@GetMapping("/delete")
-    public String delete(Long id) {
-        userService.delete(id);
-        return "redirect:/show";
-    }
+	public String delete(Long id) {
+		userService.delete(id);
+		return "redirect:/show";
+	}
 
 }
