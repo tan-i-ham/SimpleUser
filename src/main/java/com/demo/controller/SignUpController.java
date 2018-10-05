@@ -37,9 +37,9 @@ public class SignUpController {
 	}
 
 	/* new user signup function */
-	@PostMapping("/signup")
+	@PostMapping("/signup2")
 	public String signUp(@Valid @ModelAttribute User user, BindingResult bindingResult, HttpSession session) {
-		System.out.println(">>>>>>>>>> in signup1");
+		System.out.println(">>>>>>>>>> in signup2");
 		System.out.println(user.toString());
 
 		// length validation not pass
@@ -52,41 +52,48 @@ public class SignUpController {
 		return "sign-up2";
 	}
 	
-	@GetMapping("/signup2")
+	@GetMapping("/confirm")
 	public String redirectfromConfirm(@Valid @ModelAttribute User user) {
 		return "sign-up2";
 	}
 	/* new user signup page 2 function */
-	@PostMapping("/signup2")
+	@PostMapping("/confirm")
 	public String toSignUp2(@Valid @ModelAttribute User user, BindingResult bindingResult, HttpSession session) {
-		System.out.println(">>>>>>>>>> in signup2");
+		System.out.println(">>>>>>>>>> in /confirm");
 		System.out.println(user.toString());
 
 		// length validation not pass
 		if (bindingResult.hasErrors()) {
 			return "sign-up2";
 		}
-//		userService.save(user);
+
 		session.setAttribute("user", user);
-		return "temp-confirm";
+		return "confirm";
 	}
 
 	/* confirm */
-	@PostMapping(value = "/confirm", params = "save")
+	@PostMapping(value = "/finish-signup", params = "save")
 	public String confirm(@ModelAttribute User user) {
-		System.out.println(">>>>>>>>>> in confirm");
+		System.out.println(">>>>>>>>>> in /finish-signup");
 		System.out.println(user.toString());
 
 		// when user confirm the data is right,
 		// then write into DB
 		userService.save(user);
-		return "redirect:/show";
+//		return "success";
+		return "successed";
+	}
+	
+	@GetMapping(value="/success")
+	public String successedPage() {
+		return "successed";
 	}
 	/* confirm click back */
-	@PostMapping(value = "/confirm", params = "back-edit")
+	@PostMapping(value = "/finish-signup", params = "back-edit")
 	public String confirmBackToEdit(@ModelAttribute User user) {
 		System.out.println(">>>>>>>>>> BACK TO SIGN UP2 TO EDIT");
-		return "redirect:/signup2";
+		return "forward:/signup2";
+	
 	}
 
 	/* list all the user */
