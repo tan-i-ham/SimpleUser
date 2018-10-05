@@ -3,30 +3,67 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+
+<style>
+#users {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#users td, #users th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#users tr:nth-child(even){background-color: #f2f2f2;}
+
+#users tr:hover {background-color: #ddd;}
+
+#users th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color:  #bf0000;
+    color: white;
+}
+
+
+</style>
 </head>
 <body>
-	<table>
+	<table id="users">
 		<thead>
 			<tr>
 				<th>ID</th>
 				<th>USERNAME</th>
 				<th>PASSWORD</th>
+				<th>FIRSTNAME</th>
+				<th>LASTNAME</th>
 				<th>CREATE_AT</th>
 				<th>MODIFIED_AT</th>
+				<th>EDIT</th>
+				<th>DELETE</th>
 			</tr>
 		</thead>
-		
+
 		<tbody>
 			<tr th:each="user : ${users}">
-				<th scope="row" th:text="${user.id}">1</th>
-				<td th:text="${user.username}">neo</td>
-				<td th:text="${user.password}">Otto</td>
-				<td th:text="${user.createdAt}">6</td>
-				<td th:text="${user.updatedAt}">6</td>
+				<td scope="row" th:text="${user.id}"></td>
+				<td th:text="${user.username}"></td>
+				<td th:text="${user.password}"></td>
+				<td th:text="${user.firstname}"></td>
+				<td th:text="${user.lastname}"></td>
+				<td th:text="${user.createdAt}"></td>
+				<td th:text="${user.updatedAt}"></td>
+				<td><a th:href="@{/{user.id}/toEdit(id=*{user.id})}">edit</a></td>
+				<td><a th:href="@{/delete(id=${user.id})}">delete</a></td>
 			</tr>
 
 		</tbody>
 
 	</table>
+	
+	<a href="/">home page</a>
 </body>
 </html>

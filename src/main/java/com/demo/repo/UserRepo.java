@@ -10,7 +10,8 @@ import com.demo.model.User;
 
 @Repository
 public interface UserRepo extends JpaRepository<User, Long>{
-	Optional<User> findById(Long id);
+	User findById(long id);
+//	void deleteById(Long id);
 	void deleteById(Long id);
 
 }
