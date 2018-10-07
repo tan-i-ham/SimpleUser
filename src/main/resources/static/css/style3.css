@@ -300,8 +300,7 @@ h2 {
 
 .main {
 	background: #f8f8f8;
-	padding: 30px 0;
-	/* border: 1px solid #000; */
+	padding: 150px 0;
 }
 
 .clear {
@@ -371,8 +370,7 @@ body {
 }
 
 .signup {
-	/* border: 1px solid #000; */
-	margin-bottom: 20px;
+	margin-bottom: 150px;
 }
 
 .signup-content {
@@ -390,7 +388,6 @@ body {
 
 .form-title {
 	margin-bottom: 33px;
-	margin-left: 50px;
 }
 
 .signup-image {
@@ -408,7 +405,7 @@ figure {
 	color: #fff;
 	border-bottom: none;
 	width: auto;
-	padding: 15px 25px;
+	padding: 15px 39px;
 	border-radius: 5px;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
@@ -416,7 +413,6 @@ figure {
 	-ms-border-radius: 5px;
 	margin-top: 25px;
 	cursor: pointer;
-	margin-right: 20px;
 }
 
 .form-submit:hover {
@@ -443,13 +439,9 @@ figure {
 	margin-left: 75px;
 	margin-right: 75px;
 	padding-left: 34px;
-	/* border: 1px solid black; */
 }
 
 .register-form {
-	width: 100%;
-}
-.confirm-form{
 	width: 100%;
 }
 
@@ -471,10 +463,6 @@ input {
 	padding: 6px 30px;
 	font-family: Poppins;
 	box-sizing: border-box;
-}
-
-.length-error {
-	color: red;
 }
 
 input::-webkit-input-placeholder {
@@ -798,26 +786,6 @@ label.valid:after {
 		margin-right: 0px;
 		margin-bottom: 10px;
 	}
-}
-
-/**
-*    confirm page css
-**/
-
-.confirm-special{
-	width: 30%;
-	/* border: 2px solid red; */
-}
-
-#confirm-form p{
-	color: black;
-	font-size: 16px;
-}
-
-#confirm-form span{
-	color: #6dabe4;
-	font-weight: bold;
-	font-size: 20px;
 }
 
 /*# sourceMappingURL=style.css.map */
