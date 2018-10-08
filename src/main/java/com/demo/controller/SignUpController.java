@@ -2,17 +2,22 @@ package com.demo.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.View;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.demo.model.User;
 import com.demo.service.UserService;
@@ -36,10 +41,11 @@ public class SignUpController {
 		return "sign-up";
 	}
 
+
 	/* new user signup function */
 	@PostMapping("/signup2")
 	public String signUp(@Valid @ModelAttribute User user, BindingResult bindingResult, HttpSession session) {
-		System.out.println(">>>>>>>>>> in signup2");
+		System.out.println(">>>>>>>>>> POST /in signup2");
 		System.out.println(user.toString());
 
 		// length validation not pass
@@ -51,49 +57,52 @@ public class SignUpController {
 
 		return "sign-up2";
 	}
-	
-	@GetMapping("/confirm")
-	public String redirectfromConfirm(@Valid @ModelAttribute User user) {
-		return "sign-up2";
-	}
+
+
 	/* new user signup page 2 function */
 	@PostMapping("/confirm")
-	public String toSignUp2(@Valid @ModelAttribute User user, BindingResult bindingResult, HttpSession session) {
+	public String toSignUp2(@ModelAttribute User user, HttpSession session) {
 		System.out.println(">>>>>>>>>> in /confirm");
 		System.out.println(user.toString());
-
-		// length validation not pass
-		if (bindingResult.hasErrors()) {
-			return "sign-up2";
-		}
+		
 
 		session.setAttribute("user", user);
+		
 		return "confirm";
 	}
 
 	/* confirm */
-	@PostMapping(value = "/finish-signup", params = "save")
-	public String confirm(@ModelAttribute User user) {
+	@PostMapping(value = "/finish-signup")
+	public String confirm(@ModelAttribute User user, @RequestParam String action,HttpServletRequest request, HttpSession session) {
 		System.out.println(">>>>>>>>>> in /finish-signup");
-		System.out.println(user.toString());
 
+		System.out.println("action >>>>>> " + action);
+		String returnStr = "";
+		
 		// when user confirm the data is right,
 		// then write into DB
-		userService.save(user);
-//		return "success";
-		return "successed";
+		// click "Save" button
+		if (action.equals("Save")) {
+			System.out.println("in save");
+			userService.save(user);
+			returnStr = "successed";
+		} 
+		// when user find something wrong, and want to correct
+		// click "Back to edit: button
+		else if (action.equals("Back to edit")) {
+			System.out.println("in back-edit");
+			// set redirect can also use post method
+			request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
+			returnStr = "redirect:/signup2";
+		}
+
+		return returnStr;
 	}
-	
-	@GetMapping(value="/success")
+
+
+	@GetMapping(value = "/success")
 	public String successedPage() {
 		return "successed";
-	}
-	/* confirm click back */
-	@PostMapping(value = "/finish-signup", params = "back-edit")
-	public String confirmBackToEdit(@ModelAttribute User user) {
-		System.out.println(">>>>>>>>>> BACK TO SIGN UP2 TO EDIT");
-		return "forward:/signup2";
-	
 	}
 
 	/* list all the user */

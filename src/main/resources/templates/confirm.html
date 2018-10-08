@@ -31,39 +31,47 @@
 						<form method="POST" class="register-form" id="confirm-form"
 							action="#" th:action="@{/finish-signup}">
 
-					
+
 							<div class="form-group">
-								<label for="username"><i class="zmdi zmdi-lock"></i></label> 
-								<p>Username : <span th:text="${session.user.username}"> </span></p>
-									 <input type="hidden" value="${session.user.username}" />
+								<label for="username"><i class="zmdi zmdi-lock"></i></label>
+								<p>
+									Username : <span th:text="${session.user.username}"> </span>
+								</p>
+								<input type="hidden" value="${session.user.username}" />
 							</div>
 							<div class="form-group">
 								<label for="password"><i class="zmdi zmdi-lock"></i></label>
-								<p>Password : <span th:text="${session.user.password}"> </span></p> 
+								<p>
+									Password : <span th:text="${session.user.password}"> </span>
+								</p>
 								<input type="hidden" value="${session.user.password}" />
 							</div>
 
 
 							<div class="form-group">
 								<label for="firstname"><i class="zmdi zmdi-lock"></i></label>
-								<p>Firstname : <span th:text="${session.user.firstname}"> </span></p> 
+								<p>
+									Firstname : <span th:text="${session.user.firstname}"> </span>
+								</p>
 								<input type="hidden" value="${session.user.firstname}" />
 							</div>
 							<div class="form-group">
 								<label for="lastname"><i class="zmdi zmdi-lock"></i></label>
-								<p>Lastname : <span th:text="${session.user.lastname}"> </span></p> 
+								<p>
+									Lastname : <span th:text="${session.user.lastname}"> </span>
+								</p>
 								<input type="hidden" value="${session.user.lastname}" />
 							</div>
 							<div class="form-group form-button">
 								<!-- <input type="submit" name="signup2" id="signup2" class="form-submit" value="go-on" /> -->
-								<input type="submit" class="form-submit" name="save"
+								<input type="submit" class="form-submit" name="action"
 									value="Save"> <input type="submit" class="form-submit"
-									name="back-edit" value="Back to edit">
+									name="action" value="Back to edit">
 							</div>
 
 						</form>
 					</div>
-				
+
 				</div>
 			</div>
 		</section>
