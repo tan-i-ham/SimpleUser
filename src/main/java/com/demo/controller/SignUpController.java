@@ -28,21 +28,36 @@ public class SignUpController {
 	@Autowired
 	UserService userService;
 
-	/* Home page */
+	/**
+	 * Home page
+	 * 
+	 * @return name of html page => "index.html"
+	 */
 	@GetMapping("/")
 	public String index() {
 		return "index";
 	}
 
-	/* SignUp page */
+	/**
+	 * SignUp page
+	 * 
+	 * @param model
+	 * @return name of html page => "sign-up.html"
+	 */
 	@GetMapping("/signup")
 	public String toSignUp(Model model) {
 		model.addAttribute("user", new User());
 		return "sign-up";
 	}
 
-
-	/* new user signup function */
+	/**
+	 * new user signup first function
+	 * 
+	 * @param user
+	 * @param bindingResult : check user's input is valid or not
+	 * @param session       : to store the user's input value between multiple page
+	 * @return name of html page => "sign-up2.html"
+	 */
 	@PostMapping("/signup2")
 	public String signUp(@Valid @ModelAttribute User user, BindingResult bindingResult, HttpSession session) {
 		System.out.println(">>>>>>>>>> POST /in signup2");
@@ -58,40 +73,48 @@ public class SignUpController {
 		return "sign-up2";
 	}
 
-
-	/* new user signup page 2 function */
+	/**
+	 * 
+	 * @param user
+	 * @param session
+	 * @return name of html page => "confirm.html"
+	 */
 	@PostMapping("/confirm")
 	public String toSignUp2(@ModelAttribute User user, HttpSession session) {
-		System.out.println(">>>>>>>>>> in /confirm");
-		System.out.println(user.toString());
-		
-
 		session.setAttribute("user", user);
-		
+
 		return "confirm";
 	}
 
 	/* confirm */
-	@PostMapping(value = "/finish-signup")
-	public String confirm(@ModelAttribute User user, @RequestParam String action,HttpServletRequest request, HttpSession session) {
+	/**
+	 * 
+	 * @param user
+	 * @param action  : check which button been clicked
+	 * @param request
+	 * @param session
+	 * @return "successed" or "redirect:/signup2"
+	 */
+	@PostMapping(value = "/signup-successed")
+	public String confirm(@ModelAttribute User user, @RequestParam String action, HttpServletRequest request,
+			HttpSession session) {
 		System.out.println(">>>>>>>>>> in /finish-signup");
 
 		System.out.println("action >>>>>> " + action);
 		String returnStr = "";
-		
-		// when user confirm the data is right,
-		// then write into DB
+
+		// when user confirm the data is right, then write into DB
 		// click "Save" button
 		if (action.equals("Save")) {
 			System.out.println("in save");
 			userService.save(user);
 			returnStr = "successed";
-		} 
+		}
 		// when user find something wrong, and want to correct
-		// click "Back to edit: button
+		// click "Back to edit" button
 		else if (action.equals("Back to edit")) {
 			System.out.println("in back-edit");
-			// set redirect can also use post method
+			// set redirect post method
 			request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
 			returnStr = "redirect:/signup2";
 		}
@@ -99,13 +122,21 @@ public class SignUpController {
 		return returnStr;
 	}
 
-
+	/**
+	 * 
+	 * @return "successed.html"
+	 */
 	@GetMapping(value = "/success")
 	public String successedPage() {
 		return "successed";
 	}
 
-	/* list all the user */
+	/**
+	 * list all the user
+	 * 
+	 * @param model
+	 * @return "show.html"
+	 */
 	@GetMapping("/show")
 	public String showAll(Model model) {
 		// get data from db
@@ -116,21 +147,40 @@ public class SignUpController {
 		return "show";
 	}
 
-	/* edit part */
+	/**
+	 * edit a data
+	 * 
+	 * @param model
+	 * @param id    : the id of a data to be edited
+	 * @return
+	 */
 	@GetMapping("/{id}/toEdit")
 	public String toEdit(Model model, Long id) {
 		User user = userService.findUserById(id);
-		model.addAttribute("user", user);// the attribute name used in html in thymeleaf
+
+		// the attribute name used in html in thymeleaf
+		model.addAttribute("user", user);
 		return "user-edit";
 	}
 
+	/**
+	 * userService edit method execute
+	 * 
+	 * @param user
+	 * @return "redirect:/show"
+	 */
 	@PostMapping("/edit")
 	public String edit(User user) {
 		userService.edit(user);
 		return "redirect:/show";
 	}
 
-	/* delete a user */
+	/**
+	 * delete a user, userService delete method execute
+	 * 
+	 * @param id
+	 * @return "redirect:/show"
+	 */
 	@GetMapping("/delete")
 	public String delete(Long id) {
 		userService.delete(id);
