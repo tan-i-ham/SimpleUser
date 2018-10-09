@@ -1,4 +1,4 @@
-package com.demo.repo;
+package com.demo.repository;
 
 import java.util.Optional;
 
@@ -7,11 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import com.demo.model.User;
 
-
 @Repository
-public interface UserRepo extends JpaRepository<User, Long>{
+public interface UserRepository extends JpaRepository<User, Long> {
 	User findById(long id);
-//	void deleteById(Long id);
-	void deleteById(Long id);
 
+	void deleteById(Long id);
 }

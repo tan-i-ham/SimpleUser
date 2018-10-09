@@ -31,11 +31,11 @@ public class User {
 	private Long id;
 
 	@NotNull
-	@Size(min = 6, max = 30, message="Enter between 6~30 characters") // length validation
+	@Size(min = 6, max = 30, message = "Enter between 6~30 characters") // length validation
 	private String username;
 
 	@NotNull
-	@Size(min = 8, message="Enter at least 8 characters") // length validation
+	@Size(min = 8, message = "Enter at least 8 characters") // length validation
 	private String password;
 
 	private String firstname;
