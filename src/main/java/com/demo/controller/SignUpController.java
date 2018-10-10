@@ -65,9 +65,9 @@ public class SignUpController {
 
 		// length validation not pass
 		if (bindingResult.hasErrors()) {
-			return "sign-up";
+			return "redirect:/signup";
 		}
-		/* session */
+		// session
 		session.setAttribute("user", user);
 
 		return "sign-up2";
@@ -86,8 +86,8 @@ public class SignUpController {
 		return "confirm";
 	}
 
-	/* confirm */
 	/**
+	 * confirm
 	 * 
 	 * @param user
 	 * @param action  : check which button been clicked
@@ -126,7 +126,7 @@ public class SignUpController {
 	 * 
 	 * @return "successed.html"
 	 */
-	@GetMapping(value = "/success")
+	@GetMapping(value = "/successed")
 	public String successedPage() {
 		return "successed";
 	}
