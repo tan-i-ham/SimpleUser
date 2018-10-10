@@ -46,15 +46,19 @@ public class SignUpController {
 	 */
 	@GetMapping("/signup")
 	public String toSignUp(Model model) {
+		System.out.println("in GET /signup");
+		
 		model.addAttribute("user", new User());
 		return "sign-up";
 	}
 	
 	@PostMapping("/signup")
-	public String redirectSignUp(@Valid @ModelAttribute User user, HttpSession session) {
+	public String redirectSignUp( @ModelAttribute User user, HttpSession session, Model model) {
 		System.out.println("in POST /signup");
 		System.out.println(user.toString());
 		
+
+		model.addAttribute("inuse", "in used username");
 		// session
 		session.setAttribute("user", user);
 		return "sign-up";
@@ -69,14 +73,26 @@ public class SignUpController {
 	 * @return name of html page => "sign-up2.html"
 	 */
 	@PostMapping("/signup2")
-	public String signUp(@Valid @ModelAttribute User user, BindingResult bindingResult, HttpSession session) {
+	public String signUp( @Valid @ModelAttribute User user, BindingResult bindingResult, 
+			HttpServletRequest request, HttpSession session) {
 		System.out.println(">>>>>>>>>> POST /in signup2");
 		System.out.println(user.toString());
-
+		
+		// check username been used or not
+		User userNameUser = userService.findUserByUsername(user.getUsername());
+		if (null != userNameUser) {
+			System.out.println("username repeated <<<<<<<<");
+			request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
+			return "redirect:/signup";
+//			return result(ExceptionMsg.UserNameUsed);
+		}
 		// length validation not pass
 		if (bindingResult.hasErrors()) {
+			request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
 			return "redirect:/signup";
 		}
+		
+	
 		// session
 		session.setAttribute("user", user);
 
