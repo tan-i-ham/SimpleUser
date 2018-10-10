@@ -49,6 +49,16 @@ public class SignUpController {
 		model.addAttribute("user", new User());
 		return "sign-up";
 	}
+	
+	@PostMapping("/signup")
+	public String redirectSignUp(@Valid @ModelAttribute User user, HttpSession session) {
+		System.out.println("in POST /signup");
+		System.out.println(user.toString());
+		
+		// session
+		session.setAttribute("user", user);
+		return "sign-up";
+	}
 
 	/**
 	 * new user signup first function
@@ -82,7 +92,7 @@ public class SignUpController {
 	@PostMapping("/confirm")
 	public String toSignUp2(@ModelAttribute User user, HttpSession session) {
 		session.setAttribute("user", user);
-
+		System.out.println(user.toString());
 		return "confirm";
 	}
 
@@ -96,9 +106,10 @@ public class SignUpController {
 	 * @return "successed" or "redirect:/signup2"
 	 */
 	@PostMapping(value = "/signup-successed")
-	public String confirm(@ModelAttribute User user, @RequestParam String action, HttpServletRequest request,
+	public String confirm(@ModelAttribute User user, @RequestParam String action, 
+			HttpServletRequest request,
 			HttpSession session) {
-		System.out.println(">>>>>>>>>> in /finish-signup");
+		System.out.println(">>>>>>>>>> in /signup-successed");
 
 		System.out.println("action >>>>>> " + action);
 		String returnStr = "";
@@ -110,10 +121,16 @@ public class SignUpController {
 			userService.save(user);
 			returnStr = "successed";
 		}
+		else if (action.equals("Back to SignUp")) {
+			System.out.println(">>>>>>>> in Back to SignUp");
+			// set redirect post method
+			request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
+			returnStr = "redirect:/signup";
+		}
 		// when user find something wrong, and want to correct
-		// click "Back to edit" button
-		else if (action.equals("Back to edit")) {
-			System.out.println("in back-edit");
+		// click "Back to SignUp2" button
+		else if (action.equals("Back to SignUp2")) {
+			System.out.println("in Back to SignUp2");
 			// set redirect post method
 			request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
 			returnStr = "redirect:/signup2";
