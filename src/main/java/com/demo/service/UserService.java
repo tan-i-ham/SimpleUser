@@ -1,6 +1,7 @@
 package com.demo.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.demo.model.User;
 
@@ -13,8 +14,12 @@ public interface UserService {
 
 	List<User> getUserList();
 
-	User findUserById(long id);
+	Optional<User> findUserById(Long id);
 	
 	User findUserByUsername(String name);
+	
+	User findUserByEmail(String email);
+	
+	void saveUser(User user);
 
 }

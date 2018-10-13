@@ -40,10 +40,12 @@
 				<th>PASSWORD</th>
 				<th>FIRSTNAME</th>
 				<th>LASTNAME</th>
-				<th>CREATE_AT</th>
-				<th>MODIFIED_AT</th>
+				
+				<th>EMAIL</th>
 				<th>EDIT</th>
 				<th>DELETE</th>
+				<th>CREATE_AT</th>
+				<th>MODIFIED_AT</th>
 			</tr>
 		</thead>
 
@@ -54,10 +56,13 @@
 				<td th:text="${user.password}"></td>
 				<td th:text="${user.firstname}"></td>
 				<td th:text="${user.lastname}"></td>
-				<td th:text="${user.createdAt}"></td>
-				<td th:text="${user.updatedAt}"></td>
+				<td th:text="${user.email}"></td>
+				
 				<td><a th:href="@{/{user.id}/toEdit(id=*{user.id})}">edit</a></td>
 				<td><a th:href="@{/delete(id=${user.id})}">delete</a></td>
+				<td th:text="${user.createdAt}"></td>
+				<td th:text="${user.updatedAt}"></td>
+				
 			</tr>
 
 		</tbody>

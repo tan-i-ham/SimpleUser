@@ -8,6 +8,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,8 +18,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.demo.model.User;
 import com.demo.service.UserService;
@@ -33,9 +35,17 @@ public class SignUpController {
 	 * 
 	 * @return name of html page => "index.html"
 	 */
-	@GetMapping("/")
-	public String index() {
-		return "index";
+	@GetMapping("/admin")
+	public ModelAndView index() {
+		ModelAndView modelAndView = new ModelAndView();
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByUsername(auth.getName());
+        
+        modelAndView.addObject("username", "Welcome " + user.getFirstname() + " " + user.getLastname() + " (" + user.getEmail() + ")");
+        modelAndView.addObject("adminMessage","Content Available Only for Users with Admin Role");
+        modelAndView.setViewName("admin");
+//		return "index";
+        return modelAndView;
 	}
 
 	/**
@@ -80,8 +90,11 @@ public class SignUpController {
 		
 		// check username been used or not
 		User userNameUser = userService.findUserByUsername(user.getUsername());
-		if (null != userNameUser) {
+		if (userNameUser != null) {
 			System.out.println("username repeated <<<<<<<<");
+			bindingResult
+            .rejectValue("username", "error.user",
+                    "There is already a user registered with the same username");
 			request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
 			return "redirect:/signup";
 //			return result(ExceptionMsg.UserNameUsed);
@@ -107,6 +120,7 @@ public class SignUpController {
 	 */
 	@PostMapping("/confirm")
 	public String toSignUp2(@ModelAttribute User user, HttpSession session) {
+		System.out.println(">>>>>>>>>> POST in /confirm");
 		session.setAttribute("user", user);
 		System.out.println(user.toString());
 		return "confirm";
@@ -134,7 +148,8 @@ public class SignUpController {
 		// click "Save" button
 		if (action.equals("Save")) {
 			System.out.println("in save");
-			userService.save(user);
+			userService.saveUser(user);
+//			userService.save(user);
 			returnStr = "successed";
 		}
 		else if (action.equals("Back to SignUp")) {
@@ -189,10 +204,10 @@ public class SignUpController {
 	 */
 	@GetMapping("/{id}/toEdit")
 	public String toEdit(Model model, Long id) {
-		User user = userService.findUserById(id);
+//		User user = userService.findUserById(id);
 
 		// the attribute name used in html in thymeleaf
-		model.addAttribute("user", user);
+//		model.addAttribute("user", user);
 		return "user-edit";
 	}
 

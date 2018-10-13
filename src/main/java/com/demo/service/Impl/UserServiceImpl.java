@@ -1,12 +1,17 @@
 package com.demo.service.Impl;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.demo.model.Role;
 import com.demo.model.User;
+import com.demo.repository.RoleRepository;
 import com.demo.repository.UserRepository;
 import com.demo.service.UserService;
 
@@ -15,6 +20,12 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private RoleRepository roleRepository;
+
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@Override
 	public void save(User user) {
@@ -36,8 +47,7 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findAll();
 	}
 
-	@Override
-	public User findUserById(long id) {
+	public Optional<User> findUserById(Long id) {
 		return userRepository.findById(id);
 	}
 
@@ -45,4 +55,17 @@ public class UserServiceImpl implements UserService {
 	public User findUserByUsername(String name) {
 		return userRepository.findByUsername(name);
 	}
-} 
+
+	@Override
+	public User findUserByEmail(String email) {
+		return userRepository.findByEmail(email);
+	}
+
+	public void saveUser(User user) {
+		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+		user.setActive(1);
+		Role userRole = roleRepository.findByRole("ADMIN");
+		user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
+		userRepository.save(user);
+	}
+}
