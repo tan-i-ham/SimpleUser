@@ -1,11 +1,77 @@
 <!DOCTYPE html>
-<html  xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" >
-<title>Insert title here</title>
+<title>home page</title>
+
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+	integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
+	crossorigin="anonymous">
+
+<!-- local css -->
+<!-- <link rel="stylesheet" type="text/css" th:href="@{css/style.css}" /> -->
 </head>
 <body>
-<h1> this is home page</h1>
-<a href="/signup">sign-up page</a>
+	<div class="container">
+		<!-- navbar -->
+
+		<nav class="navbar navbar-expand-lg navbar-dark bg-primary ">
+
+			<a class="navbar-brand" href="/"> <img
+				src="https://seeklogo.com/images/R/rakuten-logo-A75F21521D-seeklogo.com.png"
+				width="30" height="30" alt="Home">
+			</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse"
+				data-target="#navbarNav" aria-controls="navbarNav"
+				aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse " id="navbarNav">
+				<ul class="navbar-nav nav justify-content-end">
+
+					<li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+					<li class="nav-item"><a class="nav-link" href="/signup">SignUp</a></li>
+
+					<li class="nav-item" sec:authorize="isAuthenticated()"><a
+						class="nav-link" href="/show">All data</a></li>
+
+				</ul>
+			</div>
+			<form th:action="
+						@{/logout}" method="post" sec:authorize="isAuthenticated()">
+				<button class="btn btn-light my-2 my-sm-0" name="Submit"
+					value="Logout" type="Submit" th:text="Logout"></button>
+			</form>
+		</nav>
+	</div>
+
+	<div class="container">
+		<h1>this is home page</h1>
+		<h2>Welcome</h2>
+		<div sec:authorize="isAuthenticated()">This content is only
+			shown to authenticated users.</div>
+	</div>
+
+
+
+
+	<!-- boostrap -->
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"
+		integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
+		integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
+		crossorigin="anonymous"></script>
 </body>
 </html>
