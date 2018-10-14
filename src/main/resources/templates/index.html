@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <title>home page</title>
 
@@ -44,9 +45,16 @@
 				</ul>
 			</div>
 			<form th:action="
-						@{/logout}" method="post" sec:authorize="isAuthenticated()">
+						@{/logout}" method="post"
+				sec:authorize="isAuthenticated()">
 				<button class="btn btn-light my-2 my-sm-0" name="Submit"
 					value="Logout" type="Submit" th:text="Logout"></button>
+			</form>
+			<form th:action="
+						@{/login}" method="post"
+				sec:authorize="isAnonymous()">
+				<button class="btn btn-light my-2 my-sm-0" name="Submit"
+					value="Login" type="Submit" th:text="Login"></button>
 			</form>
 		</nav>
 	</div>
@@ -56,9 +64,17 @@
 		<h2>Welcome</h2>
 		<div sec:authorize="isAuthenticated()">This content is only
 			shown to authenticated users.</div>
+		<div sec:authorize="hasRole('ROLE_ADMIN')">This content is only
+			shown to <span class="font-weight-bold">administrators.</span></div>
+		<div sec:authorize="hasRole('ROLE_USER')">This content is only
+			shown to <span class="font-weight-bold">users.</span></div>
+			
+		<div>Username: <span sec:authentication="name"></span></div>
+
+	Roles:<span sec:authorize="isAuthenticated()"
+		sec:authentication="principal.authorities">[ROLE_USER,
+		ROLE_ADMIN]</span>
 	</div>
-
-
 
 
 	<!-- boostrap -->
