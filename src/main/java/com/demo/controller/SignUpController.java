@@ -43,7 +43,7 @@ public class SignUpController {
         
         modelAndView.addObject("username", "Welcome " + user.getFirstname() + " " + user.getLastname() + " (" + user.getEmail() + ")");
         modelAndView.addObject("adminMessage","Content Available Only for Users with Admin Role");
-        modelAndView.setViewName("admin");
+        modelAndView.setViewName("login-successed");
 //		return "index";
         return modelAndView;
 	}
