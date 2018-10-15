@@ -6,8 +6,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -26,7 +29,10 @@ import com.demo.service.UserService;
 
 @Controller
 @SessionAttributes("user")
-public class SignUpController {
+public class UserController {
+	
+	private static final Logger log = LoggerFactory.getLogger(UserController.class);
+	
 	@Autowired
 	UserService userService;
 
@@ -35,8 +41,31 @@ public class SignUpController {
 	 * 
 	 * @return name of html page => "index.html"
 	 */
+	@GetMapping("/")
+	public String home() {
+		return "index";
+	}
+	
+	/**
+	 * use GET request method to login page
+	 * 
+	 * @return name of the html => "login.html"
+	 */
+	@GetMapping("/login")
+	public String login() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+		if (!(auth instanceof AnonymousAuthenticationToken)) {
+
+			/* The user is logged in :) */
+			log.info("The user is logged in.");
+			return "redirect:/";
+		}
+		return "login";
+	}
+	
 	@GetMapping("/admin")
-	public ModelAndView index() {
+	public ModelAndView admin() {
 		ModelAndView modelAndView = new ModelAndView();
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByUsername(auth.getName());

@@ -1,81 +1,180 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	xmlns:th="http://www.thymeleaf.org">
+
 <head>
 <title>Login page</title>
-<link rel="stylesheet" type="text/css"
-	href="webjars/bootstrap/3.3.6/css/bootstrap.min.css" />
-<link rel="stylesheet" type="text/css" th:href="@{css/style.css}" />
+
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+	integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
+	crossorigin="anonymous">
+
+<!-- local css -->
+<!-- <link rel="stylesheet" type="text/css" th:href="@{css/style.css}" /> -->
+<style>
+:root { -
+	-input-padding-x: 1.5rem; -
+	-input-padding-y: .75rem;
+}
+/*
+body {*/
+	/*background: #9CECFB;*/
+	/* fallback for old browsers */
+	/*background: -webkit-linear-gradient(to right, #0052D4, #65C7F7, #9CECFB);*/
+	/* Chrome 10-25, Safari 5.1-6 */
+	/*background: linear-gradient(to right, #0052D4, #65C7F7, #9CECFB);*/
+	/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+/*}
+*/
+.card-signin {
+	border: 0;
+	border-radius: 1rem;
+	box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
+	background: #ddd;
+}
+
+.card-signin .card-title {
+	margin-bottom: 3rem;
+	font-weight: 300;
+	font-size: 1.5rem;
+}
+
+.card-signin .card-body {
+	padding: 2rem;
+}
+
+.form-signin {
+	width: 100%;
+}
+
+.form-signin .btn {
+	font-size: 80%;
+	border-radius: 5rem;
+	letter-spacing: .1rem;
+	font-weight: bold;
+	padding: 1rem;
+	transition: all 0.2s;
+}
+
+.form-label-group {
+	position: relative;
+	margin-bottom: 2rem;
+}
+
+.form-label-group input {
+	border-radius: 2rem;
+}
+
+.form-label-group>input, .form-label-group>label {
+	padding: var(- -input-padding-y) var(- -input-padding-x);
+}
+
+.form-label-group>label {
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: block;
+	width: 100%;
+	margin-bottom: 0;
+	/* Override default `<label>` margin */
+	line-height: 1.5;
+	color: #495057;
+	border: 1px solid transparent;
+	border-radius: .25rem;
+	transition: all .1s ease-in-out;
+}
+
+/* .form-label-group input::-webkit-input-placeholder {
+	color: transparent;
+}
+
+.form-label-group input:-ms-input-placeholder {
+	color: transparent;
+}
+
+.form-label-group input::-ms-input-placeholder {
+	color: transparent;
+}
+
+.form-label-group input::-moz-placeholder {
+	color: transparent;
+}
+*/
+.form-label-group input:focus::-webkit-input-placeholder{ 
+	color:transparent; 
+}
+ 
+.form-label-group input:not (:placeholder-shown )~label {
+	padding-top: calc(var(- -input-padding-y)/3);
+	padding-bottom: calc(var(- -input-padding-y)/3);
+	font-size: 12px;
+	color: #777;
+}
+
+
+</style>
 </head>
+
 <body>
-
-
-
-	<h2>Login page</h2>
-	<div th:if="${param.error}">Invalid username and password.</div>
-	<div th:if="${param.logout}">You have been logged out.</div>
-	<form th:action="@{/login}" method="post">
-		<div>
-			<label> User Name : <input type="text" name="username" />
-			</label>
-		</div>
-		<div>
-			<label> Password: <input type="password" name="password" />
-			</label>
-		</div>
-		<div>
-			<input type="submit" value="Sign In" />
-		</div>
-	</form>
-
-	<form th:action="@{/logout}" method="post">
-		<input type="submit" class="form-submit" value="Sign Out" />
-	</form>
-
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
 				<div class="card card-signin my-5">
 					<div class="card-body">
 						<h5 class="card-title text-center">Sign In</h5>
-						<form class="form-signin">
+
+						<form class="form-signin" th:action="@{/login}" method="POST">
 							<div class="form-label-group">
-								<input type="email" id="inputEmail" class="form-control"
-									placeholder="Email address" required autofocus> <label
-									for="inputEmail">Email address</label>
+								<input type="text" id="username" name="username"
+									placeholder="username" class="form-control" />
 							</div>
 
 							<div class="form-label-group">
-								<input type="password" id="inputPassword" class="form-control"
-									placeholder="Password" required> <label
-									for="inputPassword">Password</label>
+								<input type="password" th:placeholder="Password" id="password"
+									name="password" class="form-control" />
 							</div>
 
-							<div class="custom-control custom-checkbox mb-3">
+							<!-- <div class="custom-control custom-checkbox mb-3">
 								<input type="checkbox" class="custom-control-input"
 									id="customCheck1"> <label class="custom-control-label"
 									for="customCheck1">Remember password</label>
+							</div> -->
+							<div align="center" th:if="${param.error}">
+								<p style="font-size: 20; color: #FF1C19;">username or
+									Password invalid, please verify</p>
 							</div>
+							<div align="center" th:if="${param.logout}">
+								<p style="font-size: 20; ">You
+									have been logged out.</p>
+							</div>
+
 							<button class="btn btn-lg btn-primary btn-block text-uppercase"
-								type="submit">Sign in</button>
-							<hr class="my-4">
-							<button class="btn btn-lg btn-google btn-block text-uppercase"
-								type="submit">
-								<i class="fab fa-google mr-2"></i> Sign in with Google
-							</button>
-							<button class="btn btn-lg btn-facebook btn-block text-uppercase"
-								type="submit">
-								<i class="fab fa-facebook-f mr-2"></i> Sign in with Facebook
-							</button>
+								name="Submit" value="Login" type="Submit" th:text="Login"></button>
 						</form>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<script src="webjars/jquery/1.9.1/jquery.min.js"></script>
-	<script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
+	<!-- boostrap -->
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"
+		integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
+		integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
+		crossorigin="anonymous"></script>
 </body>
 </html>
