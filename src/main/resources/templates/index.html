@@ -3,95 +3,72 @@
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <title>home page</title>
-
 <!-- Required meta tags -->
 <meta charset="utf-8">
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <!-- Bootstrap CSS -->
 <link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
-	integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+	integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
 	crossorigin="anonymous">
-
 <!-- local css -->
 <!-- <link rel="stylesheet" type="text/css" th:href="@{css/style.css}" /> -->
 </head>
 <body>
-	<div class="container">
-		<!-- navbar -->
-
-		<nav class="navbar navbar-expand-lg navbar-dark bg-primary ">
-
+	<!-- navbar -->
+	<nav class="navbar navbar-expand-lg shadow-sm ">
+		<div class="container">
 			<a class="navbar-brand" href="/"> <img
-				src="https://seeklogo.com/images/R/rakuten-logo-A75F21521D-seeklogo.com.png"
-				width="30" height="30" alt="Home">
+				src="https://seeklogo.com/images/R/rakuten-logo-A75F21521D-seeklogo.com.png" width="30"
+				height="30" alt="Home">
 			</a>
-			<button class="navbar-toggler" type="button" data-toggle="collapse"
-				data-target="#navbarNav" aria-controls="navbarNav"
-				aria-expanded="false" aria-label="Toggle navigation">
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+				aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
-			<div class="collapse navbar-collapse " id="navbarNav">
-				<ul class="navbar-nav nav justify-content-end">
-					<li class="nav-item" sec:authorize="isAuthenticated()"><a
-						class="nav-link" href="/to-do">TO-DO</a></li>
-					<li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')"><a
-						class="nav-link" href="/show">All data</a></li>
-
-				</ul>
-			</div>
-			<form th:action="
-						@{/logout}" method="post"
-				sec:authorize="isAuthenticated()">
-
-				<button class="btn btn-light my-2 my-sm-0" name="Submit"
-					value="Logout" type="Submit" th:text="Logout"></button>
-			</form>
-
-			<a class="nav-link" href="/signup" sec:authorize="isAnonymous()">
-				<button class="btn btn-light my-2 my-sm-0" value="Sign Up">Sign
-					Up</button>
+			<nav class="my-2 my-md-0 mr-md-3 collapse navbar-collapse">
+				<a class="p-2 text-dark" href="/about">About</a> <a class="p-2 text-dark" href="/contact">Contact</a>
+				<a class="p-2 text-dark" href="/to-do" sec:authorize="isAuthenticated()">TO-DO</a> <a
+					class="p-2 text-dark" href="/show" sec:authorize="hasRole('ROLE_ADMIN')">All data</a>
+			</nav>
+			<div class="d-inline" sec:authorize="isAuthenticated()">
+			<span class="navbar-text mr-2">Hi! </span>
+			<span class="navbar-text mr-2" th:text="${currentUser.firstname}"> firstname </span>
+			<span class="navbar-text mr-2"  th:text="${currentUser.lastname}"> lastname </span></div>
+			
+			<a class="nav-link" href="/logout" sec:authorize="isAuthenticated()">
+				<button class="btn btn-outline-primary my-2 my-sm-0" value="Logout">Logout</button>
 			</a> <a class="nav-link" href="/login" sec:authorize="isAnonymous()">
-				<button class="btn btn-light my-2 my-sm-0" value="login">Login</button>
+				<button class="btn btn-outline-primary my-2 my-sm-0" value="login">Login</button>
+			</a> <a class="nav-link" href="/signup" sec:authorize="isAnonymous()">
+				<button class="btn btn-outline-primary my-2 my-sm-0" value="Sign Up">Sign Up</button>
 			</a>
-		</nav>
-	</div>
-
+		</div>
+	</nav>
 	<div class="container">
 		<h1>this is home page</h1>
 		<h2>Welcome</h2>
-		<div sec:authorize="isAuthenticated()">This content is only
-			shown to authenticated users.</div>
+		<div sec:authorize="isAuthenticated()">This content is only shown to authenticated users.</div>
 		<div sec:authorize="hasRole('ROLE_ADMIN')">
 			This content is only shown to <span class="font-weight-bold">administrators.</span>
 		</div>
 		<div sec:authorize="hasRole('ROLE_USER')">
 			This content is only shown to <span class="font-weight-bold">users.</span>
 		</div>
-
 		<div>
 			Username: <span sec:authentication="name"></span>
 		</div>
-
-		Roles:<span sec:authorize="isAuthenticated()"
-			sec:authentication="principal.authorities">[ROLE_USER,
+		Roles:<span sec:authorize="isAuthenticated()" sec:authentication="principal.authorities">[ROLE_USER,
 			ROLE_ADMIN]</span>
 	</div>
-
-
 	<!-- boostrap -->
-	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
 		crossorigin="anonymous"></script>
-	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"
-		integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+		integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
 		crossorigin="anonymous"></script>
-	<script
-		src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
-		integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
-		crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+		integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
 </body>
 </html>

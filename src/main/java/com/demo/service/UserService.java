@@ -3,6 +3,8 @@ package com.demo.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.demo.model.User;
 
 public interface UserService {
@@ -21,5 +23,6 @@ public interface UserService {
 	User findUserByEmail(String email);
 	
 	void saveUser(User user);
+	
 
 }
