@@ -202,7 +202,7 @@ public class UserController {
 			System.out.println("in save");
 			userService.saveUser(user);
 //			userService.save(user);
-			returnStr = "successed";
+			returnStr = "signup-succeeded";
 		} else if (action.equals("Back to SignUp")) {
 			System.out.println(">>>>>>>> in Back to SignUp");
 			// set redirect post method
@@ -225,9 +225,9 @@ public class UserController {
 	 * 
 	 * @return "successed.html"
 	 */
-	@GetMapping(value = "/successed")
-	public String successedPage() {
-		return "successed";
+	@GetMapping("/succeeded")
+	public String toSignupSucceededPage() {
+		return "signup-succeeded";
 	}
 
 	/**
@@ -289,5 +289,7 @@ public class UserController {
 		userService.delete(id);
 		return "redirect:/show";
 	}
+	
+
 
 }
