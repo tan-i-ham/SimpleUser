@@ -1,87 +1,154 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<title>Confirm Page</title>
-
-<!-- Font Icon -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="../../../../favicon.ico">
+<title>Checkout example for Bootstrap</title>
+<!-- Bootstrap CSS -->
 <link rel="stylesheet"
-	href="fonts/material-icon/css/material-design-iconic-font.min.css">
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+	integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+	crossorigin="anonymous">
+<!-- Custom styles for this template -->
+<!-- Latest compiled and minified CSS -->
+<style>
+.container {
+	max-width: 960px;
+}
 
-<!-- Main css -->
-<link rel="stylesheet" href="css/style.css">
+.lh-condensed {
+	line-height: 1.25;
+}
+
+input[disabled].ro {
+	border: none;
+	background-color: transparent;
+	border: 0;
+	font-size: 1em;
+}
+
+</style>
 </head>
-
-<body>
-
-	<div class="main">
-		<!-- Sign up form -->
-		<section class="signup">
-
-			<div class="container">
-
-				<div class="signup-content display-flex-center">
-					<h2 class="form-title">Confirm Page</h2>
-
-					<div class="signup-form display-flex-center confirm-special">
-						<form method="POST" class="register-form" id="confirm-form"
-							action="#" th:action="@{/signup-successed}">
-
-
-							<div class="form-group">
-								<label for="username"><i class="zmdi zmdi-lock"></i></label>
-								<p>
-									Username : <span th:text="${session.user.username}"> </span>
-								</p>
-								<input type="hidden" value="${session.user.username}" />
+<body class="bg-light">
+	<div class="container">
+		<div class="my-5  text-center">
+			<!-- <img class="d-inline mx-auto mb-4" src="images/note.png" alt="" width="60" height="60">  -->
+			<h2 class="d-inline">Confirm Information</h2>
+		</div>
+		<div class="row justify-content-md-center">
+			<div class="col-md-8 order-md-1">
+				<form class="needs-validation" method="POST" th:action="@{/signup-successed}">
+					<div class="row form-group">
+						<div class="col-md-12 ">
+							<label for="username">Username</label>
+							<div class="col-md-10 mb-3">
+								<input type="text"
+									class="form-control border-bottom border-primary rounded-0 form-control-plaintext ro"
+									id="username" th:value="${session.user.username}" disabled>
 							</div>
-							<div class="form-group">
-								<label for="password"><i class="zmdi zmdi-lock"></i></label>
-								<p>
-									Password : <span th:text="${session.user.password}"> </span>
-								</p>
-								<input type="hidden" value="${session.user.password}" />
+							<label for="password">Password</label>
+							<div class="col-md-10 mb-3">
+								<input type="text"
+									class="form-control border-bottom border-primary rounded-0 form-control-plaintext ro"
+									id="password" th:value="${session.user.password}" disabled>
 							</div>
-
-
-							<div class="form-group">
-								<label for="firstname"><i class="zmdi zmdi-lock"></i></label>
-								<p>
-									Firstname : <span th:text="${session.user.firstname}"> </span>
-								</p>
-								<input type="hidden" value="${session.user.firstname}" />
+							<label for="email">Email</label>
+							<div class="col-md-10 mb-3">
+								<input type="text"
+									class="form-control border-bottom border-primary rounded-0 form-control-plaintext ro"
+									id="email" th:value="${session.user.email}" disabled>
 							</div>
-							<div class="form-group">
-								<label for="lastname"><i class="zmdi zmdi-lock"></i></label>
-								<p>
-									Lastname : <span th:text="${session.user.lastname}"> </span>
-								</p>
-								<input type="hidden" value="${session.user.lastname}" />
-							</div>
-							<div class="form-group form-button">
-								<!-- <input type="submit" name="signup2" id="signup2" class="form-submit" value="go-on" /> -->
-								<input type="submit" class="form-submit" name="action" value="Save"> 
-								<input type="submit" class="form-submit" name="action" value="Back to SignUp">
-								<input type="submit" class="form-submit" name="action" value="Back to SignUp2">
-							</div>
-
-						</form>
+						</div>
 					</div>
-
-				</div>
+					<div class="row">
+						<div class="col-md-6">
+							<label for="firstName">First name</label>
+							<div class="col-md-10 mb-3">
+								<input type="text"
+									class="form-control border-bottom border-primary rounded-0 form-control-plaintext ro"
+									id="firstName" th:value="${session.user.firstname}" disabled>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<label for="lastName">Last name</label>
+							<div class="col-md-10 mb-3">
+								<input type="text"
+									class="form-control border-bottom border-primary rounded-0 form-control-plaintext ro"
+									id="lastName" th:value="${session.user.lastname}" disabled>
+							</div>
+						</div>
+					</div>
+					<hr class="mb-4">
+					<button class="btn btn-primary btn-lg btn-block" type="submit" name="action" value="Save">Save</button>
+					<button class="btn btn-primary btn-lg btn-block" type="submit" name="action" value="Back to SignUp">Back to SignUp</button>
+					<button class="btn btn-primary btn-lg btn-block" type="submit" name="action" value="Back to SignUp2">Back to SignUp2</button>  
+				</form>
 			</div>
-		</section>
-
-
+		</div>
+		<footer class="my-5 pt-5 text-muted text-center text-small">
+			<p class="mb-1">&copy; 2017-2018 Company Name</p>
+			<ul class="list-inline">
+				<li class="list-inline-item"><a href="#">Privacy</a></li>
+				<li class="list-inline-item"><a href="#">Terms</a></li>
+				<li class="list-inline-item"><a href="#">Support</a></li>
+			</ul>
+		</footer>
 	</div>
+	<!-- Bootstrap core JavaScript
+    ================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+	<script>
+		window.jQuery
+				|| document
+						.write(
+								'<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')
+	</script>
+	<script>
+		// Example starter JavaScript for disabling form submissions if there are invalid fields
+						(
+								function() {
+									'use strict';
 
-	<!-- JS -->
-	<script src="vendor/jquery/jquery.min.js"></script>
-	<script src="js/main.js"></script>
+									window
+											.addEventListener(
+													'load',
+													function() {
+														// Fetch all the forms we want to apply custom Bootstrap validation styles to
+														var forms = document
+																.getElementsByClassName('needs-validation');
+
+														// Loop over them and prevent submission
+														var validation = Array.prototype.filter
+																.call(
+																		forms,
+																		function(
+																				form) {
+																			form
+																					.addEventListener(
+																							'submit',
+																							function(
+																									event) {
+																								if (form
+																										.checkValidity() === false) {
+																									event
+																											.preventDefault();
+																									event
+																											.stopPropagation();
+																								}
+																								form.classList
+																										.add('was-validated');
+																							},
+																							false);
+																		});
+													}, false);
+								})();
+	</script>
 </body>
-
 </html>

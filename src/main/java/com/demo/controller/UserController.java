@@ -6,10 +6,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,7 +31,10 @@ import com.demo.service.UserService;
 
 @Controller
 @SessionAttributes("user")
-public class SignUpController {
+public class UserController {
+
+	private static final Logger log = LoggerFactory.getLogger(UserController.class);
+
 	@Autowired
 	UserService userService;
 
@@ -35,17 +43,50 @@ public class SignUpController {
 	 * 
 	 * @return name of html page => "index.html"
 	 */
+	@GetMapping("/")
+	public String home(Model model, @AuthenticationPrincipal UserDetails currentUser) {
+		String returnPage = "";
+		if (currentUser == null) {
+			returnPage = "index";
+		} else {
+			User user = (User) userService.findUserByUsername(currentUser.getUsername());
+			model.addAttribute("currentUser", user);
+			returnPage = "index";
+		}
+
+		return returnPage;
+	}
+
+	/**
+	 * use GET request method to login page
+	 * 
+	 * @return name of the html => "login.html"
+	 */
+	@GetMapping("/login")
+	public String login() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+		if (!(auth instanceof AnonymousAuthenticationToken)) {
+
+			/* The user is logged in :) */
+			log.info("The user is logged in.");
+			return "redirect:/";
+		}
+		return "login";
+	}
+
 	@GetMapping("/admin")
-	public ModelAndView index() {
+	public ModelAndView admin() {
 		ModelAndView modelAndView = new ModelAndView();
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.findUserByUsername(auth.getName());
-        
-        modelAndView.addObject("username", "Welcome " + user.getFirstname() + " " + user.getLastname() + " (" + user.getEmail() + ")");
-        modelAndView.addObject("adminMessage","Content Available Only for Users with Admin Role");
-        modelAndView.setViewName("login-successed");
+		User user = userService.findUserByUsername(auth.getName());
+
+		modelAndView.addObject("username",
+				"Welcome " + user.getFirstname() + " " + user.getLastname() + " (" + user.getEmail() + ")");
+		modelAndView.addObject("adminMessage", "Content Available Only for Users with Admin Role");
+		modelAndView.setViewName("login-successed");
 //		return "index";
-        return modelAndView;
+		return modelAndView;
 	}
 
 	/**
@@ -57,21 +98,28 @@ public class SignUpController {
 	@GetMapping("/signup")
 	public String toSignUp(Model model) {
 		System.out.println("in GET /signup");
-		
+
 		model.addAttribute("user", new User());
 		return "sign-up";
 	}
-	
+
 	@PostMapping("/signup")
-	public String redirectSignUp( @ModelAttribute User user, HttpSession session, Model model) {
+	public String redirectSignUp(@ModelAttribute User user, HttpSession session, Model model) {
 		System.out.println("in POST /signup");
 		System.out.println(user.toString());
-		
 
 		model.addAttribute("inuse", "in used username");
 		// session
 		session.setAttribute("user", user);
 		return "sign-up";
+	}
+
+	@GetMapping("/signup2")
+	public String toSignUp2(Model model) {
+		System.out.println("in GET /signup2");
+
+		model.addAttribute("user", new User());
+		return "sign-up2";
 	}
 
 	/**
@@ -83,18 +131,17 @@ public class SignUpController {
 	 * @return name of html page => "sign-up2.html"
 	 */
 	@PostMapping("/signup2")
-	public String signUp( @Valid @ModelAttribute User user, BindingResult bindingResult, 
-			HttpServletRequest request, HttpSession session) {
+	public String signUp(@Valid @ModelAttribute User user, BindingResult bindingResult, HttpServletRequest request,
+			HttpSession session) {
 		System.out.println(">>>>>>>>>> POST /in signup2");
 		System.out.println(user.toString());
-		
+
 		// check username been used or not
 		User userNameUser = userService.findUserByUsername(user.getUsername());
 		if (userNameUser != null) {
 			System.out.println("username repeated <<<<<<<<");
-			bindingResult
-            .rejectValue("username", "error.user",
-                    "There is already a user registered with the same username");
+			bindingResult.rejectValue("username", "error.user",
+					"There is already a user registered with the same username");
 			request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
 			return "redirect:/signup";
 //			return result(ExceptionMsg.UserNameUsed);
@@ -104,14 +151,20 @@ public class SignUpController {
 			request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
 			return "redirect:/signup";
 		}
-		
-	
+
 		// session
 		session.setAttribute("user", user);
 
 		return "sign-up2";
 	}
+	
+	@GetMapping("/confirm")
+	public String toConfirm(Model model) {
+		System.out.println("in GET /confirm");
 
+		model.addAttribute("user", new User());
+		return "confirm";
+	}
 	/**
 	 * 
 	 * @param user
@@ -135,9 +188,8 @@ public class SignUpController {
 	 * @param session
 	 * @return "successed" or "redirect:/signup2"
 	 */
-	@PostMapping(value = "/signup-successed")
-	public String confirm(@ModelAttribute User user, @RequestParam String action, 
-			HttpServletRequest request,
+	@PostMapping("/signup-successed")
+	public String confirm(@ModelAttribute User user, @RequestParam String action, HttpServletRequest request,
 			HttpSession session) {
 		System.out.println(">>>>>>>>>> in /signup-successed");
 
@@ -150,9 +202,8 @@ public class SignUpController {
 			System.out.println("in save");
 			userService.saveUser(user);
 //			userService.save(user);
-			returnStr = "successed";
-		}
-		else if (action.equals("Back to SignUp")) {
+			returnStr = "signup-succeeded";
+		} else if (action.equals("Back to SignUp")) {
 			System.out.println(">>>>>>>> in Back to SignUp");
 			// set redirect post method
 			request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
@@ -174,9 +225,9 @@ public class SignUpController {
 	 * 
 	 * @return "successed.html"
 	 */
-	@GetMapping(value = "/successed")
-	public String successedPage() {
-		return "successed";
+	@GetMapping("/succeeded")
+	public String toSignupSucceededPage() {
+		return "signup-succeeded";
 	}
 
 	/**
@@ -186,12 +237,16 @@ public class SignUpController {
 	 * @return "show.html"
 	 */
 	@GetMapping("/show")
-	public String showAll(Model model) {
+	public String showAll(Model model, @AuthenticationPrincipal UserDetails currentUser) {
 		// get data from db
 		List<User> users = userService.getUserList();
+
 		// set the attribute name
 		// let the thymeleaf know which data it is
 		model.addAttribute("users", users);
+
+		User user = (User) userService.findUserByUsername(currentUser.getUsername());
+		model.addAttribute("currentUser", user);
 		return "show";
 	}
 
@@ -234,5 +289,7 @@ public class SignUpController {
 		userService.delete(id);
 		return "redirect:/show";
 	}
+	
+
 
 }

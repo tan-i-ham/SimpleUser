@@ -49,8 +49,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 		    .authorizeRequests()
-		    .antMatchers("/", "/login", "/signup", "/signup2", "/confirm", "/successed", "/signup-successed").permitAll()  //  the "/" and "/login" paths are configured to not require any authentication.
-		    .antMatchers("/admin/**").hasAuthority("ADMIN")
+		    .antMatchers("/", "/login", "/signup", "/signup2", "/confirm", "/succeeded", "/signup-successed", "/error").permitAll()  //  the "/" and "/login" paths are configured to not require any authentication.
+		    .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+		    .antMatchers("/show").hasAuthority("ROLE_ADMIN")
 		    .anyRequest().authenticated().and().csrf().disable()
 		.formLogin()
 		    .loginPage("/login").failureUrl("/login?error=true")
