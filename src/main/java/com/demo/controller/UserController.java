@@ -140,16 +140,19 @@ public class UserController {
 		User userNameUser = userService.findUserByUsername(user.getUsername());
 		if (userNameUser != null) {
 			System.out.println("username repeated <<<<<<<<");
+		
 			bindingResult.rejectValue("username", "error.user",
 					"There is already a user registered with the same username");
 			request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
 			return "redirect:/signup";
+//			return "sign-up";
 //			return result(ExceptionMsg.UserNameUsed);
 		}
 		// length validation not pass
 		if (bindingResult.hasErrors()) {
 			request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
 			return "redirect:/signup";
+//			return "sign-up";
 		}
 
 		// session

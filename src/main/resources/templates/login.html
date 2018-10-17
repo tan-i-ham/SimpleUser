@@ -11,15 +11,14 @@
 	integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
 	crossorigin="anonymous">
 <!-- local css -->
-<!-- <link rel="stylesheet" type="text/css" th:href="@{css/style.css}" /> -->
 <!-- Custom styles for this template -->
+<link th:href="@{css/login.css}" rel="stylesheet">
 <style>
 /* let the placeholder text transparent*/
 input:focus::-webkit-input-placeholder {
 	color: transparent;
 }
 </style>
-<link th:href="@{css/login.css}" rel="stylesheet">
 </head>
 <body class="text-center">
 	<form class="form-signin" th:action="@{/login}" method="POST">
@@ -39,14 +38,16 @@ input:focus::-webkit-input-placeholder {
 				class="custom-control-label" for="customCheck1">Remember password</label>
 		</div>
 		<div align="center" th:if="${param.error}">
-			<p style="font-size: 20; color: #FF1C19;">username or Password invalid, please verify</p>
+			<p style="font-size: 20; color: #FF1C19;">Username or Password invalid, please verify</p>
 		</div>
 		<div align="center" th:if="${param.logout}">
 			<p style="font-size: 20;">You have been logged out.</p>
 		</div>
 		<button class="btn btn-lg btn-primary btn-block" name="Submit" value="Login" type="Submit"
 			th:text="Login"></button>
-		<p class="mt-2" style="font-size: 20;">Or&nbsp;&nbsp;<a href="/">Register</a></p>
+		<p class="mt-2" style="font-size: 20;">
+			Or&nbsp;&nbsp;<a href="/">Register</a>
+		</p>
 		<p class="mt-4 mb-3 text-muted">&copy; 2018-2019</p>
 	</form>
 	<!-- boostrap -->
