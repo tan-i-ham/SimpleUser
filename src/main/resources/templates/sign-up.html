@@ -46,6 +46,7 @@
 							</div>
 							<input type="text" class="form-control" id="username" placeholder="Username" th:field="*{username}" required>
 							<span class="length-error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username Error</span>
+							
 							<div class="invalid-feedback" style="width: 100%;">Your username is required.</div>
 						</div>
 					</div>
@@ -87,9 +88,7 @@
 						.write(
 								'<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')
 	</script>
-	<script src="../../assets/js/vendor/popper.min.js"></script>
-	<script src="../../dist/js/bootstrap.min.js"></script>
-	<script src="../../assets/js/vendor/holder.min.js"></script>
+	
 	<script>
 		// Example starter JavaScript for disabling form submissions if there are invalid fields
 						(

@@ -1,52 +1,107 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-<meta charset="UTF-8">
-<title>edit page</title>
+<title>home page</title>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- Bootstrap CSS -->
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+	integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+	crossorigin="anonymous">
+<!-- local css -->
+<!-- <link rel="stylesheet" type="text/css" th:href="@{css/style.css}" /> -->
 </head>
 <body>
-<h1>Edit Page</h1>
-	<div class="with:80%">
-		<form class="form-horizontal" th:action="@{/edit}" th:object="${user}"
-			method="POST">
-			<input type="hidden" name="id" th:value="*{id}" />
-			<div class="form-group">
-				<label for="username" class="col-sm-2 control-label">userName</label>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" name="username"
-						id="username" th:value="*{username}" placeholder="username" />
-				</div>
+	<!-- navbar -->
+	<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+		<div class="container">
+			<a class="navbar-brand" href="/"><img
+				src="https://seeklogo.com/images/R/rakuten-logo-A75F21521D-seeklogo.com.png" width="30"
+				height="30" alt="Home"></a>
+			<button class="navbar-toggler mr-0" type="button" data-toggle="collapse"
+				data-target="#navbarsExample07" aria-controls="navbarsExample07" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse mr-0" id="navbarsExample07">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item"><a class="p-2 text-dark" href="/about">About</span></a></li>
+					<li class="nav-item"><a class="p-2 text-dark" href="/contact">Contact</a></li>
+					<li class="nav-item"><a class="p-2 text-dark" href="/to-do"
+						sec:authorize="isAuthenticated()">TO-DO</a></li>
+					<li class="nav-item dropdown"><a class="p-2 text-dark" href="/show"
+						sec:authorize="hasRole('ROLE_ADMIN')">All data</a></li>
+				</ul>
 			</div>
-			<div class="form-group">
-				<label for="password" class="col-sm-2 control-label">Password</label>
-				<div class="col-sm-10">
-					<input type="password" class="form-control" name="password"
-						id="password" th:value="*{password}" placeholder="Password" />
-				</div>
+			<div class="d-inline" sec:authorize="isAuthenticated()">
+				<span class="navbar-text mr-2">Hi! </span> <span class="navbar-text mr-2"
+					th:text="${currentUser.firstname}"> firstname </span> <span class="navbar-text mr-2"
+					th:text="${currentUser.lastname}"> lastname </span>
 			</div>
-			<div class="form-group">
-				<label for="firstname" class="col-sm-2 control-label">firstname</label>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" name="firstname" id="firstname"
-						th:value="*{firstname}" placeholder="firstname" />
-				</div>
+			<div class="d-inline">
+				<a class="nav-link d-inline" href="/logout" sec:authorize="isAuthenticated()">
+					<button class="btn btn-outline-primary my-2 my-sm-0" value="Logout">Logout</button>
+				</a> <a class="nav-link d-inline" href="/login" sec:authorize="isAnonymous()">
+					<button class="btn btn-outline-primary my-2 my-sm-0" value="login">Login</button>
+				</a> <a class="nav-link d-inline" href="/signup" sec:authorize="isAnonymous()">
+					<button class="btn btn-outline-primary my-2 my-sm-0" value="Sign Up">Sign Up</button>
+				</a>
 			</div>
-			<div class="form-group">
-				<label for="lastname" class="col-sm-2 control-label">lastname</label>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" name="lastname" id="lastname"
-						th:value="*{lastname}" placeholder="lastname" />
-				</div>
+		</div>
+	</nav>
+	<div class="my-5  text-center">
+		<!-- <img class="d-inline mx-auto mb-4" src="images/note.png" alt="" width="60" height="60">  -->
+		<h2 class="d-inline">Edit Information</h2>
+	</div>
+	<div class="container">
+		<div class="row justify-content-md-center ">
+			<div class="col-md-8 order-md-1">
+				<form class="needs-validation" method="POST" th:action="@{/edit}" th:object="${user}">
+					<input type="hidden" name="id" th:value="*{id}" />
+					<div class="row form-group">
+						<div class="col-md-12">
+							<label for="username">Username</label>
+							<div class="col-md-8 mb-3">
+								<input type="text" class="form-control" id="username" th:value="*{username}">
+							</div>
+							<label for="password">Password</label>
+							<div class="col-md-8 mb-3">
+								<input type="text" class="form-control" id="password" th:value="*{password}">
+							</div>
+							<label for="email">Email</label>
+							<div class="col-md-8 mb-3">
+								<input type="text" class="form-control" id="email" th:value="*{email}">
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-5">
+							<div class="col-md-8 mb-3">
+								<label for="firstName">First name</label> <input type="text" class="form-control"
+									id="firstName" th:value="*{firstname}">
+							</div>
+						</div>
+						<div class="col-md-5">
+							<label for="lastName">Last name</label>
+							<div class="col-md-8 mb-3">
+								<input type="text" class="form-control" id="lastName" th:value="*{lastname}">
+							</div>
+						</div>
+						<div class="col-md-2"></div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-offset-2 col-sm-10">
+							<button class="btn btn-primary btn-lg btn-block" type="submit" name="action" value="Save">Save</button>
+							<input type="submit" value="Submit" class="btn btn-info" /> &nbsp; &nbsp; &nbsp; <a
+								th:href="@{/}" class="btn btn-info">Back</a>
+						</div>
+					</div>
+				</form>
 			</div>
-			<div class="form-group">
-				<div class="col-sm-offset-2 col-sm-10">
-					<input type="submit" value="Submit" class="btn btn-info" /> &nbsp;
-					&nbsp; &nbsp; <a href="/toAdd" th:href="@{/show}"
-						class="btn btn-info">Back</a>
-				</div>
-
-			</div>
-		</form>
+		</div>
 	</div>
 </body>
 </html>

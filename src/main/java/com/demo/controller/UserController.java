@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 
 import com.demo.model.User;
@@ -73,20 +72,6 @@ public class UserController {
 			return "redirect:/";
 		}
 		return "login";
-	}
-
-	@GetMapping("/admin")
-	public ModelAndView admin() {
-		ModelAndView modelAndView = new ModelAndView();
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = userService.findUserByUsername(auth.getName());
-
-		modelAndView.addObject("username",
-				"Welcome " + user.getFirstname() + " " + user.getLastname() + " (" + user.getEmail() + ")");
-		modelAndView.addObject("adminMessage", "Content Available Only for Users with Admin Role");
-		modelAndView.setViewName("login-successed");
-//		return "index";
-		return modelAndView;
 	}
 
 	/**
@@ -140,16 +125,19 @@ public class UserController {
 		User userNameUser = userService.findUserByUsername(user.getUsername());
 		if (userNameUser != null) {
 			System.out.println("username repeated <<<<<<<<");
+
 			bindingResult.rejectValue("username", "error.user",
 					"There is already a user registered with the same username");
 			request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
 			return "redirect:/signup";
+//			return "sign-up";
 //			return result(ExceptionMsg.UserNameUsed);
 		}
 		// length validation not pass
 		if (bindingResult.hasErrors()) {
 			request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
 			return "redirect:/signup";
+//			return "sign-up";
 		}
 
 		// session
@@ -157,7 +145,7 @@ public class UserController {
 
 		return "sign-up2";
 	}
-	
+
 	@GetMapping("/confirm")
 	public String toConfirm(Model model) {
 		System.out.println("in GET /confirm");
@@ -165,6 +153,7 @@ public class UserController {
 		model.addAttribute("user", new User());
 		return "confirm";
 	}
+
 	/**
 	 * 
 	 * @param user
@@ -186,12 +175,12 @@ public class UserController {
 	 * @param action  : check which button been clicked
 	 * @param request
 	 * @param session
-	 * @return "successed" or "redirect:/signup2"
+	 * @return "signup-succeeded" or "redirect:/signup2"
 	 */
-	@PostMapping("/signup-successed")
+	@PostMapping("/signup-succeeded")
 	public String confirm(@ModelAttribute User user, @RequestParam String action, HttpServletRequest request,
 			HttpSession session) {
-		System.out.println(">>>>>>>>>> in /signup-successed");
+		System.out.println(">>>>>>>>>> in /signup-succeeded");
 
 		System.out.println("action >>>>>> " + action);
 		String returnStr = "";
@@ -223,7 +212,7 @@ public class UserController {
 
 	/**
 	 * 
-	 * @return "successed.html"
+	 * @return "signup-succeeded.html"
 	 */
 	@GetMapping("/succeeded")
 	public String toSignupSucceededPage() {
@@ -257,13 +246,25 @@ public class UserController {
 	 * @param id    : the id of a data to be edited
 	 * @return
 	 */
-	@GetMapping("/{id}/toEdit")
-	public String toEdit(Model model, Long id) {
-//		User user = userService.findUserById(id);
+	@GetMapping("/toEdit")
+	public String toEdit(Model model, Long id, @AuthenticationPrincipal UserDetails currentUser) {
 
-		// the attribute name used in html in thymeleaf
-//		model.addAttribute("user", user);
-		return "user-edit";
+		String returnPage = "";
+		if (currentUser == null) {
+			returnPage = "user-edit";
+		} else {
+			User user = (User) userService.findUserByUsername(currentUser.getUsername());
+		
+			String a = user.getPassword();
+			System.out.println(a);
+			userService.findUserById(id);
+			model.addAttribute("currentUser", user);
+			model.addAttribute("user", user);
+			returnPage = "user-edit";
+		}
+
+		return returnPage;
+
 	}
 
 	/**
@@ -289,7 +290,5 @@ public class UserController {
 		userService.delete(id);
 		return "redirect:/show";
 	}
-	
-
 
 }

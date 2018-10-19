@@ -99,7 +99,7 @@
 						<td th:text="${user.firstname}"></td>
 						<td th:text="${user.lastname}"></td>
 						<td th:text="${user.email}"></td>
-						<td><a th:href="@{/{user.id}/toEdit(id=*{user.id})}">edit</a></td>
+						<td><a th:href="@{/toEdit(id=${user.id})}">edit</a></td>
 						<td><a th:href="@{/delete(id=${user.id})}">delete</a></td>
 						<td th:text="${user.createdAt}"></td>
 						<td th:text="${user.updatedAt}"></td>
