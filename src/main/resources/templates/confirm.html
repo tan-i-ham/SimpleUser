@@ -28,9 +28,14 @@ input[disabled].ro {
 	border: none;
 	background-color: transparent;
 	border: 0;
-	font-size: 1em;
+	font-size: 1.5em;
+	sont-weight: bold;
 }
 
+input[type=text] {
+	font-size: 1.5em;
+	sont-weight: bold;
+}
 </style>
 </head>
 <body class="bg-light">
@@ -41,7 +46,7 @@ input[disabled].ro {
 		</div>
 		<div class="row justify-content-md-center">
 			<div class="col-md-8 order-md-1">
-				<form class="needs-validation" method="POST" th:action="@{/signup-successed}">
+				<form class="needs-validation" method="POST" th:action="@{/signup-succeeded}">
 					<div class="row form-group">
 						<div class="col-md-12 ">
 							<label for="username">Username</label>
@@ -82,10 +87,28 @@ input[disabled].ro {
 							</div>
 						</div>
 					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<label for="gender">Gender</label>
+							<div class="col-md-10 mb-3">
+								<input type="text"
+									class="form-control border-bottom border-primary rounded-0 form-control-plaintext ro"
+									id="firstName" th:value="${session.user.gender}" disabled>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<label for="pl">Programming Language</label>
+							<div class="col-md-10 mb-3">
+								<input type="text"
+									class="form-control border-bottom border-primary rounded-0 form-control-plaintext ro"
+									id="lastName" th:value="${session.user.programmingLanguage}" disabled>
+							</div>
+						</div>
+					</div>
 					<hr class="mb-4">
 					<button class="btn btn-primary btn-lg btn-block" type="submit" name="action" value="Save">Save</button>
 					<button class="btn btn-primary btn-lg btn-block" type="submit" name="action" value="Back to SignUp">Back to SignUp</button>
-					<button class="btn btn-primary btn-lg btn-block" type="submit" name="action" value="Back to SignUp2">Back to SignUp2</button>  
+					<button class="btn btn-primary btn-lg btn-block" type="submit" name="action" value="Back to SignUp2">Back to SignUp2</button>
 				</form>
 			</div>
 		</div>

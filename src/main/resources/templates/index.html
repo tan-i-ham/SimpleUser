@@ -13,6 +13,17 @@
 	crossorigin="anonymous">
 <!-- local css -->
 <!-- <link rel="stylesheet" type="text/css" th:href="@{css/style.css}" /> -->
+<style>
+.lan {
+	height: 100px;
+	border: 3px solid black;
+}
+
+.lan>p{
+	font-size: 20px;
+/* 	border: 2px solid black; */
+}
+</style>
 </head>
 <body>
 	<!-- navbar -->
@@ -39,24 +50,32 @@
 			<div class="d-inline" sec:authorize="isAuthenticated()">
 				<span class="navbar-text mr-2">Hi! </span> <span class="navbar-text mr-2"
 					th:text="${currentUser.firstname}"> firstname </span> <span class="navbar-text mr-2"
-					th:text="${currentUser.lastname}"> lastname </span> 
+					th:text="${currentUser.lastname}"> lastname </span>
 			</div>
 			<div class="d-inline">
 				<a class="nav-link d-inline" href="/logout" sec:authorize="isAuthenticated()">
 					<button class="btn btn-outline-primary my-2 my-sm-0" value="Logout">Logout</button>
-				</a> 
-				<a class="nav-link d-inline" href="/login" sec:authorize="isAnonymous()">
+				</a> <a class="nav-link d-inline" href="/login" sec:authorize="isAnonymous()">
 					<button class="btn btn-outline-primary my-2 my-sm-0" value="login">Login</button>
-				</a> 
-				<a class="nav-link d-inline" href="/signup" sec:authorize="isAnonymous()">
+				</a> <a class="nav-link d-inline" href="/signup" sec:authorize="isAnonymous()">
 					<button class="btn btn-outline-primary my-2 my-sm-0" value="Sign Up">Sign Up</button>
 				</a>
 			</div>
 		</div>
 	</nav>
-	<div class="container">
+	<div class="container text-center">
 		<h1>this is home page</h1>
 		<h2>Welcome</h2>
+		<div sec:authorize="isAuthenticated()" class="">
+			<div class="row align-items-center justify-content-center my-5" th:if="${languages} != null">
+				<div class="col-md-3 " th:each="ln : ${languages}">
+					<div class="lan mx-4 my-auto d-flex align-items-center justify-content-center rounded border-primary">
+						<p class="text-primary text-monospace my-auto"> <a th:href="@{https://www.google.com/search?(q=*{ln})}" th:text="*{ln}" target="_blank"></a></p>
+						
+					</div>
+				</div>
+			</div>
+		</div>
 		<div sec:authorize="isAuthenticated()">This content is only shown to authenticated users.</div>
 		<div sec:authorize="hasRole('ROLE_ADMIN')">
 			This content is only shown to <span class="font-weight-bold">administrators.</span>
