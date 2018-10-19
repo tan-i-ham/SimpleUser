@@ -50,7 +50,13 @@ public class UserController {
 		} else {
 			User user = (User) userService.findUserByUsername(currentUser.getUsername());
 			model.addAttribute("currentUser", user);
-			returnPage = "index";
+			if (user.getProgrammingLanguage() == null) {
+				returnPage = "index";
+			} else {
+				String[] languages = user.getProgrammingLanguage().split(",");
+				model.addAttribute("languages", languages);
+				returnPage = "index";
+			}
 		}
 
 		return returnPage;
@@ -254,7 +260,7 @@ public class UserController {
 			returnPage = "user-edit";
 		} else {
 			User user = (User) userService.findUserByUsername(currentUser.getUsername());
-		
+
 			String a = user.getPassword();
 			System.out.println(a);
 			userService.findUserById(id);
