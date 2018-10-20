@@ -3,7 +3,8 @@
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="">
 <meta name="author" content="">
 <link rel="icon" href="../../../../favicon.ico">
@@ -22,50 +23,72 @@
 .lh-condensed {
 	line-height: 1.25;
 }
+
+p.length-error {
+	color: red;
+}
 </style>
 </head>
 <body class="bg-light">
 	<div class="container">
 		<div class="my-3 mt-5 text-center">
-			<img class="d-inline mx-auto mb-4" src="images/note.png" alt="" width="60"
-				height="60">
+			<img class="d-inline mx-auto mb-4" src="images/note.png" alt=""
+				width="60" height="60">
 			<h2 class="d-inline">Sign Up form</h2>
-			
+
 		</div>
 		<div class="row justify-content-md-center">
 			<div class="col-md-8 order-md-1">
 				<h4 class="mb-3">Username, Password & Email</h4>
-				<form class="needs-validation" method="POST" novalidate 
-					th:action="@{/signup2}"
-					th:object="${user}">
+				<form class="needs-validation" method="POST" novalidate
+					th:action="@{/signup}" th:object="${user}">
 					<div class="mb-3">
 						<label for="username">Username</label>
 						<div class="input-group">
 							<div class="input-group-prepend">
 								<span class="input-group-text">@</span>
 							</div>
-							<input type="text" class="form-control" id="username" placeholder="Username" th:field="*{username}" required>
-							<span class="length-error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username Error</span>
-							
-							<div class="invalid-feedback" style="width: 100%;">Your username is required.</div>
+							<input type="text" class="form-control" id="username"
+								placeholder="Username" th:field="*{username}" required>
+
+							<div class="invalid-feedback" style="width: 100%;">Your
+								username is required.</div>
 						</div>
+						
+						<p class="length-error" th:if="${#fields.hasErrors('username')}"
+							th:errors="*{username}">Username Error</p>
+
 					</div>
 					<div class="mb-3">
 						<label for="password">Password</label>
 						<div class="input-group">
-							<input type="password" class="form-control" id="password" placeholder="Password" th:field="*{password}" required>
-							<span class="length-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</span>
-							<div class="invalid-feedback" style="width: 100%;">Your password is required.</div>
+							
+							<input type="password" class="form-control" id="password"
+								placeholder="Password" th:field="*{password}" required>
+
+							<div class="invalid-feedback" style="width: 100%;">Your
+								password is required.</div>
 						</div>
+						<p class="length-error" th:if="${#fields.hasErrors('password')}"
+							th:errors="*{password}">Password Error</p>
+
 					</div>
+
+
 					<div class="mb-3">
-						<label for="email">Email</label> <input type="email" class="form-control" id="email"
-							placeholder="you@example.com" th:field="*{email}">
-							<span class="length-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Password Error</span>
-						<div class="invalid-feedback">Please enter a valid email address for shipping updates.</div>
+						<label for="email">Email</label> <input type="email"
+							class="form-control" id="email" placeholder="you@example.com"
+							th:field="*{email}">
+						<div class="invalid-feedback">Please enter a valid email
+							address for shipping updates.</div>
+						<p class="length-error" th:if="${#fields.hasErrors('email')}"
+							th:errors="*{email}">Password Error</p>
 					</div>
+
+
 					<hr class="mb-4">
-					<button class="btn btn-primary btn-lg btn-block" type="submit">Continue to register</button>
+					<button class="btn btn-primary btn-lg btn-block" type="submit">Continue
+						to register</button>
 				</form>
 			</div>
 		</div>
@@ -88,7 +111,7 @@
 						.write(
 								'<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')
 	</script>
-	
+
 	<script>
 		// Example starter JavaScript for disabling form submissions if there are invalid fields
 						(
