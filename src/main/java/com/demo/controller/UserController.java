@@ -9,7 +9,6 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,8 +22,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.servlet.View;
-
 import com.demo.model.User;
 import com.demo.service.UserService;
 
@@ -38,9 +35,10 @@ public class UserController {
 	UserService userService;
 
 	/**
-	 * Home page
 	 * 
-	 * @return name of html page => "index.html"
+	 * @param model
+	 * @param currentUser
+	 * @return
 	 */
 	@GetMapping("/")
 	public String home(Model model, @AuthenticationPrincipal UserDetails currentUser) {
@@ -81,112 +79,115 @@ public class UserController {
 	}
 
 	/**
-	 * SignUp page
 	 * 
 	 * @param model
-	 * @return name of html page => "sign-up.html"
+	 * @param session
+	 * @return
 	 */
 	@GetMapping("/signup")
-	public String toSignUp(Model model) {
+	public String toSignUp(Model model, HttpSession session) {
 		System.out.println("in GET /signup");
+		if (session.getAttribute("user") == null) {
+			System.out.println("session is null");
+			model.addAttribute("user", new User());
+		}
 
-		model.addAttribute("user", new User());
+		System.out.println(session.getAttribute("user"));
+
 		return "sign-up";
 	}
 
-	@PostMapping("/signup")
-	public String redirectSignUp(@ModelAttribute User user, HttpSession session, Model model) {
-		System.out.println("in POST /signup");
-		System.out.println(user.toString());
-
-		model.addAttribute("inuse", "in used username");
-		// session
-		session.setAttribute("user", user);
-		return "sign-up";
-	}
-
-	@GetMapping("/signup2")
-	public String toSignUp2(Model model) {
-		System.out.println("in GET /signup2");
-
-		model.addAttribute("user", new User());
-		return "sign-up2";
-	}
-
-	/**
-	 * new user signup first function
-	 * 
-	 * @param user
-	 * @param bindingResult : check user's input is valid or not
-	 * @param session       : to store the user's input value between multiple page
-	 * @return name of html page => "sign-up2.html"
-	 */
-	@PostMapping("/signup2")
-	public String signUp(@Valid @ModelAttribute User user, BindingResult bindingResult, HttpServletRequest request,
-			HttpSession session) {
-		System.out.println(">>>>>>>>>> POST /in signup2");
-		System.out.println(user.toString());
-
-		// check username been used or not
-		User userNameUser = userService.findUserByUsername(user.getUsername());
-		if (userNameUser != null) {
-			System.out.println("username repeated <<<<<<<<");
-
-			bindingResult.rejectValue("username", "error.user",
-					"There is already a user registered with the same username");
-			request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
-			return "redirect:/signup";
-//			return "sign-up";
-//			return result(ExceptionMsg.UserNameUsed);
-		}
-		// length validation not pass
-		if (bindingResult.hasErrors()) {
-			request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
-			return "redirect:/signup";
-//			return "sign-up";
-		}
-
-		// session
-		session.setAttribute("user", user);
-
-		return "sign-up2";
-	}
-
-	@GetMapping("/confirm")
-	public String toConfirm(Model model) {
-		System.out.println("in GET /confirm");
-
-		model.addAttribute("user", new User());
-		return "confirm";
-	}
-
 	/**
 	 * 
 	 * @param user
-	 * @param session
-	 * @return name of html page => "confirm.html"
-	 */
-	@PostMapping("/confirm")
-	public String toSignUp2(@ModelAttribute User user, HttpSession session) {
-		System.out.println(">>>>>>>>>> POST in /confirm");
-		session.setAttribute("user", user);
-		System.out.println(user.toString());
-		return "confirm";
-	}
-
-	/**
-	 * confirm
-	 * 
-	 * @param user
-	 * @param action  : check which button been clicked
+	 * @param bindingResult
 	 * @param request
 	 * @param session
-	 * @return "signup-succeeded" or "redirect:/signup2"
+	 * @return
 	 */
-	@PostMapping("/signup-succeeded")
+	@PostMapping("/signup")
+	public String signUp(@Valid @ModelAttribute User user, BindingResult bindingResult, HttpServletRequest request,
+			HttpSession session) {
+		System.out.println("in POST /signup");
+
+		User userNameUser = userService.findUserByUsername(user.getUsername());
+
+		// check username been used or not
+		if (userNameUser != null) {
+			System.out.println("username repeated <<<<<<<<");
+			bindingResult.rejectValue("username", "error.user",
+					"There is already a user registered with the same username");
+			return "sign-up";
+		}
+		// when input has length error
+		if (bindingResult.hasErrors()) {
+			return "sign-up";
+		}
+
+		// session
+		session.setAttribute("user", user);
+
+		return "redirect:/signup2";
+	}
+
+	/**
+	 * 
+	 * @param model
+	 * @param session
+	 * @return
+	 */
+	@GetMapping("/signup2")
+	public String toSignUp2(Model model, HttpSession session) {
+		System.out.println("in GET /signup2");
+
+//		model.addAttribute("user", new User());
+
+		System.out.println(session.getAttribute("user"));
+		return "sign-up2";
+	}
+
+	/**
+	 * 
+	 * @param user
+	 * @param bindingResult
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@PostMapping("/signup2")
+	public String signUp2(@Valid @ModelAttribute User user, BindingResult bindingResult, HttpServletRequest request,
+			HttpSession session) {
+		System.out.println(">>>>>>>>>> POST in /signup2");
+		session.setAttribute("user", user);
+		System.out.println(user.toString());
+
+		return "redirect:/confirm";
+	}
+
+	/**
+	 * 
+	 * @param model
+	 * @param session
+	 * @return
+	 */
+	@GetMapping("/confirm")
+	public String toConfirm(Model model, HttpSession session) {
+		System.out.println("in GET /confirm");
+		return "confirm";
+	}
+
+	/**
+	 * 
+	 * @param user
+	 * @param action
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@PostMapping("/confirm")
 	public String confirm(@ModelAttribute User user, @RequestParam String action, HttpServletRequest request,
 			HttpSession session) {
-		System.out.println(">>>>>>>>>> in /signup-succeeded");
+		System.out.println(">>>>>>>>>> in POST /confirm");
 
 		System.out.println("action >>>>>> " + action);
 		String returnStr = "";
@@ -196,20 +197,15 @@ public class UserController {
 		if (action.equals("Save")) {
 			System.out.println("in save");
 			userService.saveUser(user);
-//			userService.save(user);
-			returnStr = "signup-succeeded";
+			returnStr = "redirect:/signup-succeeded";
 		} else if (action.equals("Back to SignUp")) {
 			System.out.println(">>>>>>>> in Back to SignUp");
-			// set redirect post method
-			request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
 			returnStr = "redirect:/signup";
 		}
 		// when user find something wrong, and want to correct
 		// click "Back to SignUp2" button
 		else if (action.equals("Back to SignUp2")) {
 			System.out.println("in Back to SignUp2");
-			// set redirect post method
-			request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
 			returnStr = "redirect:/signup2";
 		}
 
@@ -218,9 +214,9 @@ public class UserController {
 
 	/**
 	 * 
-	 * @return "signup-succeeded.html"
+	 * @return
 	 */
-	@GetMapping("/succeeded")
+	@GetMapping("/signup-succeeded")
 	public String toSignupSucceededPage() {
 		return "signup-succeeded";
 	}
