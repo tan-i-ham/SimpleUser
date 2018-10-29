@@ -41,8 +41,9 @@ public class UserController {
 	 * @return
 	 */
 	@GetMapping("/")
-	public String home(Model model, @AuthenticationPrincipal UserDetails currentUser) {
+	public String home(Model model, @AuthenticationPrincipal UserDetails currentUser, HttpSession session) {
 		String returnPage = "";
+		session.invalidate();
 		if (currentUser == null) {
 			returnPage = "index";
 		} else {
@@ -66,9 +67,9 @@ public class UserController {
 	 * @return name of the html => "login.html"
 	 */
 	@GetMapping("/login")
-	public String login() {
+	public String login(HttpSession session) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
+		session.invalidate();
 		if (!(auth instanceof AnonymousAuthenticationToken)) {
 
 			/* The user is logged in :) */
@@ -85,8 +86,10 @@ public class UserController {
 	 * @return
 	 */
 	@GetMapping("/signup")
-	public String toSignUp(Model model, HttpSession session) {
+	public String toSignUp(Model model, HttpServletRequest request, HttpSession session) {
+		System.out.println(">>>>>>>>>>>>>"+request.getRequestURI());
 		System.out.println("in GET /signup");
+
 		if (session.getAttribute("user") == null) {
 			System.out.println("session is null");
 			model.addAttribute("user", new User());
@@ -197,6 +200,8 @@ public class UserController {
 		if (action.equals("Save")) {
 			System.out.println("in save");
 			userService.saveUser(user);
+			// kill session
+			session.invalidate();
 			returnStr = "redirect:/signup-succeeded";
 		} else if (action.equals("Back to SignUp")) {
 			System.out.println(">>>>>>>> in Back to SignUp");

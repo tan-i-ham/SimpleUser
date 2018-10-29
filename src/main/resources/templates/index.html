@@ -19,9 +19,9 @@
 	border: 3px solid black;
 }
 
-.lan>p{
+.lan>p {
 	font-size: 20px;
-/* 	border: 2px solid black; */
+	/* 	border: 2px solid black; */
 }
 </style>
 </head>
@@ -29,9 +29,8 @@
 	<!-- navbar -->
 	<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
 		<div class="container">
-			<a class="navbar-brand" href="/"><img
-				src="https://seeklogo.com/images/R/rakuten-logo-A75F21521D-seeklogo.com.png" width="30"
-				height="30" alt="Home"></a>
+			<a class="navbar-brand" href="/"><img src="/images/rlogo.jpg" width="40" height="40"
+				alt="Home"><span class="align-middle font-weight-bold text-monospace">TechHelp</span></a>
 			<button class="navbar-toggler mr-0" type="button" data-toggle="collapse"
 				data-target="#navbarsExample07" aria-controls="navbarsExample07" aria-expanded="false"
 				aria-label="Toggle navigation">
@@ -42,7 +41,7 @@
 					<li class="nav-item"><a class="p-2 text-dark" href="/about">About</span></a></li>
 					<li class="nav-item"><a class="p-2 text-dark" href="/contact">Contact</a></li>
 					<li class="nav-item"><a class="p-2 text-dark" href="/to-do"
-						sec:authorize="isAuthenticated()">TO-DO</a></li>
+						sec:authorize="isAuthenticated()">Help List</a></li>
 					<li class="nav-item dropdown"><a class="p-2 text-dark" href="/show"
 						sec:authorize="hasRole('ROLE_ADMIN')">All data</a></li>
 				</ul>
@@ -64,16 +63,27 @@
 		</div>
 	</nav>
 	<div class="container text-center">
-		<h1>this is home page</h1>
-		<h2>Welcome</h2>
+		<h2 class="mt-5">
+			Welcome to <img src="/images/rlogo.jpg" width=8% height=8% alt="Home">TechHelp
+		</h2>
 		<div sec:authorize="isAuthenticated()" class="">
+			<h4 class="mt-3">Your programming languages skills are</h4>
+			<div class="row align-items-center justify-content-center my-5" th:if="${languages} == null">
+				<h3>you have not edited any programming skills yet</h3>
+			</div>
 			<div class="row align-items-center justify-content-center my-5" th:if="${languages} != null">
-				<div class="col-md-3 " th:each="ln : ${languages}">
-					<div class="lan mx-4 my-auto d-flex align-items-center justify-content-center rounded border-primary">
-						<p class="text-primary text-monospace my-auto"> <a th:href="@{https://www.google.com/search?(q=*{ln})}" th:text="*{ln}" target="_blank"></a></p>
-						
+				<div class="col-md-3 my-2" th:each="ln : ${languages}">
+					<div
+						class="lan mx-4 my-auto d-flex align-items-center justify-content-center rounded border-primary">
+						<p class="text-primary text-monospace my-auto">
+							<img th:attr="src=@{'/images/' + *{ln} + '.png'}" height=30%, width=30%> <a
+								th:href="@{https://www.google.com/search?(q=*{ln})}" th:text="*{ln}" target="_blank"></a>
+						</p>
 					</div>
 				</div>
+			</div>
+			<div class="row justify-content-center " th:if="${languages} != null">
+				<h4>check anyone need your help ?</h4>
 			</div>
 		</div>
 		<div sec:authorize="isAuthenticated()">This content is only shown to authenticated users.</div>
@@ -83,11 +93,10 @@
 		<div sec:authorize="hasRole('ROLE_USER')">
 			This content is only shown to <span class="font-weight-bold">users.</span>
 		</div>
-		<div>
-			Username: <span sec:authentication="name"></span>
+		<div sec:authorize="isAuthenticated()">
+			User: <span sec:authentication="name"></span> <br>
+			Roles:<span  sec:authentication="principal.authorities">[ROLE_USER, ROLE_ADMIN]</span>
 		</div>
-		Roles:<span sec:authorize="isAuthenticated()" sec:authentication="principal.authorities">[ROLE_USER,
-			ROLE_ADMIN]</span>
 	</div>
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
 		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

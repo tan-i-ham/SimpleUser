@@ -63,10 +63,13 @@ public class User {
 
 	@Column(name = "lastname")
 	private String lastname;
-	
+
 	@Column(name = "gender")
 	private String gender;
-	
+
+	@Column(name = "country")
+	private String country;
+
 	@Column(name = "programming_language")
 	private String programmingLanguage;
 
@@ -166,13 +169,21 @@ public class User {
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
-	
+
 	public String getGender() {
 		return gender;
 	}
 
 	public void setGender(String gender) {
 		this.gender = gender;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
 	}
 
 	public String getProgrammingLanguage() {
@@ -186,7 +197,7 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", password=" + password + ", email=" + email
-				+ ", firstname=" + firstname + ", lastname=" + lastname + ", gender=" + gender
+				+ ", firstname=" + firstname + ", lastname=" + lastname + ", gender=" + gender + ", country=" + country
 				+ ", programmingLanguage=" + programmingLanguage + ", active=" + active + ", roles=" + roles + "]";
 	}
 
