@@ -7,7 +7,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 <link rel="icon" href="../../../../favicon.ico">
-<title>Checkout example for Bootstrap</title>
+<title>Confirm</title>
 <!-- Bootstrap CSS -->
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
@@ -47,7 +47,7 @@ input[type=text] {
 		<div class="row justify-content-md-center">
 			<div class="col-md-8 order-md-1">
 				<form class="needs-validation" method="POST" th:action="@{/confirm}">
-					<div class="row form-group">
+					<div class="row form-group ml-3">
 						<div class="col-md-12 ">
 							<label for="username">Username</label>
 							<div class="col-md-10 mb-3">
@@ -69,7 +69,7 @@ input[type=text] {
 							</div>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row ml-3">
 						<div class="col-md-6">
 							<label for="firstName">First name</label>
 							<div class="col-md-10 mb-3">
@@ -87,37 +87,57 @@ input[type=text] {
 							</div>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row ml-3">
 						<div class="col-md-6">
 							<label for="gender">Gender</label>
 							<div class="col-md-10 mb-3">
 								<input type="text"
 									class="form-control border-bottom border-primary rounded-0 form-control-plaintext ro"
-									id="firstName" th:value="${session.user.gender}" disabled>
+									id="gender" th:value="${session.user.gender}" disabled>
 							</div>
 						</div>
 						<div class="col-md-6">
+							<label for="country">Country</label>
+							<div class="col-md-10 mb-3">
+								<input type="text"
+									class="form-control border-bottom border-primary rounded-0 form-control-plaintext ro"
+									id="country" th:value="${session.user.country}" disabled>
+							</div>
+						</div>
+					</div>
+					<div class="row form-group ml-3">
+						<div class="col-md-12 ">
 							<label for="pl">Programming Language</label>
 							<div class="col-md-10 mb-3">
 								<input type="text"
 									class="form-control border-bottom border-primary rounded-0 form-control-plaintext ro"
-									id="lastName" th:value="${session.user.programmingLanguage}" disabled>
+									id="programmingLanguage" th:value="${session.user.programmingLanguage}" disabled>
 							</div>
 						</div>
 					</div>
 					<hr class="mb-4">
-					<button class="btn btn-primary btn-lg btn-block" type="submit" name="action" value="Save">Save</button>
-					<button class="btn btn-primary btn-lg btn-block" type="submit" name="action" value="Back to SignUp">Back to SignUp</button>
-					<button class="btn btn-primary btn-lg btn-block" type="submit" name="action" value="Back to SignUp2">Back to SignUp2</button>
+					<div class="row text-center mb-2">
+						<div class="col-md-8 text-center mx-auto">
+							<button class="btn btn-primary btn-lg btn-block" type="submit" name="action" value="Save">Save</button>
+						</div>
+					</div>
+					<div class="row text-center  justify-content-center">
+						<div class="col-md-4 text-center ">
+							<button class="btn btn-outline-dark btn-lg btn-block " type="submit" name="action"
+								value="Back to SignUp">Back to SignUp</button>
+						</div>
+						<div class="col-md-4 text-center ">
+							<button class="btn btn-outline-dark btn-lg btn-block" type="submit" name="action"
+								value="Back to SignUp2">Back to SignUp2</button>
+						</div>
+					</div>
 				</form>
 			</div>
 		</div>
-		<footer class="my-5 pt-5 text-muted text-center text-small">
-			<p class="mb-1">&copy; 2017-2018 Company Name</p>
+		<footer class="my-3 pt-4 text-muted text-center text-small">
+			<p class="mb-1">&copy; 2018-2019</p>
 			<ul class="list-inline">
-				<li class="list-inline-item"><a href="#">Privacy</a></li>
-				<li class="list-inline-item"><a href="#">Terms</a></li>
-				<li class="list-inline-item"><a href="#">Support</a></li>
+				<li class="list-inline-item"><a href="/">Home</a></li>
 			</ul>
 		</footer>
 	</div>
