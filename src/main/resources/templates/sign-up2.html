@@ -60,8 +60,8 @@
 							</div>
 						</div>
 						<div class="col-md-6 mb-3">
-							<label for="country">Country</label>
-							 <select class="form-control" id="country" name="country" th:field="*{country}">
+							<label for="country">Country</label> <select class="form-control" id="country" name="country"
+								th:field="*{country}">
 								<option value="Japan" th:selected="selected">Japan</option>
 								<option value="Taiwan" th:selected="selected">Taiwan</option>
 								<option value="India" th:selected="selected">India</option>
@@ -106,11 +106,12 @@
 							th:field="*{programmingLanguage}"> <label class="form-check-label" for="go">Go</label>
 					</div>
 					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="checkbox" id="other" value="other"
+						<input class="form-check-input" type="checkbox" id="other" value="other" 
+							onclick="openInput()"
 							aria-label="Checkbox for following text input" th:field="*{programmingLanguage}"> <label
 							class="form-check-label" for="other">Other</label> <input type="text"
-							class="form-control form-control-sm ml-2 other" id="oth"
-							aria-label="Text input with checkbox">
+							class="form-control form-control-sm ml-2 other" id="oth_input"
+							aria-label="Text input with checkbox"  onkeyup="changeDisabled()" disabled>
 					</div>
 					<hr class="mb-4">
 					<div class="row text-center">
@@ -118,6 +119,7 @@
 							<button class="btn btn-primary btn-lg btn-block" type="submit" onclick="check()">Confirm</button>
 						</div>
 					</div>
+					<h4 class="d-none" id="lanStr" th:text="${user.programmingLanguage}"></h4>
 				</form>
 			</div>
 		</div>
@@ -135,14 +137,63 @@
 		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
 		crossorigin="anonymous"></script>
 	<script>
+		$(document).ready(
+			function() {
+				var languages = $('#lanStr').text().split(",");
+				var checkLen = languages.length;
+				if (checkLen > 1) {
+					var count = checkLen;
+					for ( var i in languages) {
+						if (document.getElementById(languages[i]) != null) {
+							count--;
+							document.getElementById(languages[i]).checked = true;
+						}
+					}
+					// means the other checkbox has been check
+					if (count != 0) {
+						document.getElementById("other").checked = true;
+						document.getElementById("oth_input").value = languages[checkLen - 1];
+					}
+				}
+				
+				if($('#oth_input').val()){
+					$('#oth_input').prop('disabled', false);
+				}
+				
+		});
+	
+		function openInput() {
+		    var checkBox = document.getElementById("other");
+		    var textInput = document.getElementById("oth_input");
+
+		    if (checkBox.checked == true){
+		    	textInput.disabled = false;
+		    } else {
+		    	textInput.value="";
+		    	textInput.disabled = true;
+		    }
+		}
+		
+		function changeDisabled(){
+			 var box = document.getElementById("other");
+			 var x = document.getElementById("oth_input");
+			 
+			 if(!(x.value)){
+			    box.checked = false;
+			    x.disabled = true;
+			 }
+		}
+		
 		function check() {
 			var otherCheckBox = document.getElementById("other");
 			var checked = otherCheckBox.checked;
 			if (checked) {
-				var otherStr = document.getElementById("oth").value;
+				var otherStr = document.getElementById("oth_input").value;
 				otherCheckBox.value = otherStr;
 			}
 		}
+		
+		
 	</script>
 	<script>
 		window.jQuery

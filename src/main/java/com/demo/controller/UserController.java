@@ -43,7 +43,7 @@ public class UserController {
 	@GetMapping("/")
 	public String home(Model model, @AuthenticationPrincipal UserDetails currentUser, HttpSession session) {
 		String returnPage = "";
-		session.invalidate();
+//		session.invalidate();
 		if (currentUser == null) {
 			returnPage = "index";
 		} else {
@@ -87,7 +87,7 @@ public class UserController {
 	 */
 	@GetMapping("/signup")
 	public String toSignUp(Model model, HttpServletRequest request, HttpSession session) {
-		System.out.println(">>>>>>>>>>>>>"+request.getRequestURI());
+		System.out.println(">>>>>>>>>>>>>" + request.getRequestURI());
 		System.out.println("in GET /signup");
 
 		if (session.getAttribute("user") == null) {
@@ -114,6 +114,7 @@ public class UserController {
 		System.out.println("in POST /signup");
 
 		User userNameUser = userService.findUserByUsername(user.getUsername());
+		User userEmailUser = userService.findUserByEmail(user.getEmail());
 
 		// check username been used or not
 		if (userNameUser != null) {
@@ -122,6 +123,14 @@ public class UserController {
 					"There is already a user registered with the same username");
 			return "sign-up";
 		}
+
+		// check email been used or not
+		if (userEmailUser != null) {
+			System.out.println("email repeated <<<<<<<<");
+			bindingResult.rejectValue("email", "error.user", "There is already a user registered with the same email");
+			return "sign-up";
+		}
+
 		// when input has length error
 		if (bindingResult.hasErrors()) {
 			return "sign-up";
@@ -144,8 +153,21 @@ public class UserController {
 		System.out.println("in GET /signup2");
 
 //		model.addAttribute("user", new User());
+		User user = (User) session.getAttribute("user");
+		model.addAttribute("user", user);
+		System.out.println(user);
+//		System.out.println("PL >>> " + user.getProgrammingLanguage());
 
-		System.out.println(session.getAttribute("user"));
+		String[] checkbox_choices = { "python", "java", "c", "cplusplus", "kotlin", "javascript", "go", "other" };
+		model.addAttribute("checkbox_choices", checkbox_choices);
+		// split programming languages to array
+		if (user.getProgrammingLanguage() == null) {
+			return "sign-up2";
+		} else {
+			String[] languages = user.getProgrammingLanguage().split(",");
+			model.addAttribute("pl", languages);
+		}
+
 		return "sign-up2";
 	}
 
@@ -162,7 +184,7 @@ public class UserController {
 			HttpSession session) {
 		System.out.println(">>>>>>>>>> POST in /signup2");
 		session.setAttribute("user", user);
-		System.out.println(user.toString());
+		System.out.println(user);
 
 		return "redirect:/confirm";
 	}
@@ -211,6 +233,11 @@ public class UserController {
 		// click "Back to SignUp2" button
 		else if (action.equals("Back to SignUp2")) {
 			System.out.println("in Back to SignUp2");
+			
+			System.out.println();
+			
+			
+			
 			returnStr = "redirect:/signup2";
 		}
 
