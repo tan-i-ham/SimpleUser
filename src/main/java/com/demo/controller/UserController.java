@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
+
 import com.demo.model.User;
 import com.demo.service.UserService;
 
@@ -41,9 +43,8 @@ public class UserController {
 	 * @return
 	 */
 	@GetMapping("/")
-	public String home(Model model, @AuthenticationPrincipal UserDetails currentUser, HttpSession session) {
+	public String home(Model model, @AuthenticationPrincipal UserDetails currentUser) {
 		String returnPage = "";
-//		session.invalidate();
 		if (currentUser == null) {
 			returnPage = "index";
 		} else {
@@ -67,9 +68,8 @@ public class UserController {
 	 * @return name of the html => "login.html"
 	 */
 	@GetMapping("/login")
-	public String login(HttpSession session) {
+	public String login() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		session.invalidate();
 		if (!(auth instanceof AnonymousAuthenticationToken)) {
 
 			/* The user is logged in :) */
@@ -79,23 +79,21 @@ public class UserController {
 		return "login";
 	}
 
+
 	/**
 	 * 
 	 * @param model
-	 * @param session
 	 * @return
 	 */
 	@GetMapping("/signup")
-	public String toSignUp(Model model, HttpServletRequest request, HttpSession session) {
-		System.out.println(">>>>>>>>>>>>>" + request.getRequestURI());
+	public String toSignUp(Model model) {
 		System.out.println("in GET /signup");
-
-		if (session.getAttribute("user") == null) {
-			System.out.println("session is null");
+		if(model.containsAttribute("user")) {
+			System.out.println("user already create");
+		}else {
 			model.addAttribute("user", new User());
 		}
-
-		System.out.println(session.getAttribute("user"));
+		
 
 		return "sign-up";
 	}
@@ -104,13 +102,11 @@ public class UserController {
 	 * 
 	 * @param user
 	 * @param bindingResult
-	 * @param request
 	 * @param session
 	 * @return
 	 */
 	@PostMapping("/signup")
-	public String signUp(@Valid @ModelAttribute User user, BindingResult bindingResult, HttpServletRequest request,
-			HttpSession session) {
+	public String signUp(@Valid @ModelAttribute User user, BindingResult bindingResult, HttpSession session) {
 		System.out.println("in POST /signup");
 
 		User userNameUser = userService.findUserByUsername(user.getUsername());
@@ -152,18 +148,14 @@ public class UserController {
 	public String toSignUp2(Model model, HttpSession session) {
 		System.out.println("in GET /signup2");
 
-//		model.addAttribute("user", new User());
 		User user = (User) session.getAttribute("user");
 		model.addAttribute("user", user);
 		System.out.println(user);
-//		System.out.println("PL >>> " + user.getProgrammingLanguage());
-
-		String[] checkbox_choices = { "python", "java", "c", "cplusplus", "kotlin", "javascript", "go", "other" };
-		model.addAttribute("checkbox_choices", checkbox_choices);
-		// split programming languages to array
+		
 		if (user.getProgrammingLanguage() == null) {
 			return "sign-up2";
 		} else {
+			// split programming languages to array
 			String[] languages = user.getProgrammingLanguage().split(",");
 			model.addAttribute("pl", languages);
 		}
@@ -210,8 +202,8 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping("/confirm")
-	public String confirm(@ModelAttribute User user, @RequestParam String action, HttpServletRequest request,
-			HttpSession session) {
+	public String confirm(@ModelAttribute User user, @RequestParam String action,
+			HttpSession session, SessionStatus status) {
 		System.out.println(">>>>>>>>>> in POST /confirm");
 
 		System.out.println("action >>>>>> " + action);
@@ -223,7 +215,7 @@ public class UserController {
 			System.out.println("in save");
 			userService.saveUser(user);
 			// kill session
-			session.invalidate();
+			status.setComplete();
 			returnStr = "redirect:/signup-succeeded";
 		} else if (action.equals("Back to SignUp")) {
 			System.out.println(">>>>>>>> in Back to SignUp");
@@ -233,11 +225,9 @@ public class UserController {
 		// click "Back to SignUp2" button
 		else if (action.equals("Back to SignUp2")) {
 			System.out.println("in Back to SignUp2");
-			
+
 			System.out.println();
-			
-			
-			
+
 			returnStr = "redirect:/signup2";
 		}
 
