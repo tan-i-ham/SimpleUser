@@ -2,10 +2,7 @@ package com.demo.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
+import com.demo.model.Group1;
+import com.demo.model.Group2;
 import com.demo.model.User;
 import com.demo.service.UserService;
 
@@ -39,21 +39,26 @@ public class UserController {
 	/**
 	 * 
 	 * @param model
-	 * @param currentUser
+	 * @param currentUser : provided by Spring Security to get the login user object
 	 * @return
 	 */
 	@GetMapping("/")
 	public String home(Model model, @AuthenticationPrincipal UserDetails currentUser) {
 		String returnPage = "";
+		// no user login
 		if (currentUser == null) {
 			returnPage = "index";
-		} else {
+		} else { // when some user is login
 			User user = (User) userService.findUserByUsername(currentUser.getUsername());
+			// set new attribute 'currentUser' to model, in order to show user's info on navbar
 			model.addAttribute("currentUser", user);
-			if (user.getProgrammingLanguage() == null) {
+			// check if this user has any prog_lan skill
+			// if not then return "index.html"
+			if (user.getProgLang() == null) {
 				returnPage = "index";
 			} else {
-				String[] languages = user.getProgrammingLanguage().split(",");
+				// separate the string into array, which can be iterated in html page
+				String[] languages = user.getProgLang().split(",");
 				model.addAttribute("languages", languages);
 				returnPage = "index";
 			}
@@ -79,7 +84,6 @@ public class UserController {
 		return "login";
 	}
 
-
 	/**
 	 * 
 	 * @param model
@@ -88,25 +92,30 @@ public class UserController {
 	@GetMapping("/signup")
 	public String toSignUp(Model model) {
 		System.out.println("in GET /signup");
-		if(model.containsAttribute("user")) {
+		
+		// not a new registration process, is return back from confirm page
+		if (model.containsAttribute("user")) {
 			System.out.println("user already create");
-		}else {
+		} else { // new register process
 			model.addAttribute("user", new User());
 		}
-		
 
 		return "sign-up";
 	}
 
 	/**
 	 * 
+	 * user click the submit button in sign-up.html
+	 * action="/signup"
+	 * method="POST" 
+	 *  
 	 * @param user
-	 * @param bindingResult
+	 * @param bindingResult : to validate the input string is atch to the rule
 	 * @param session
 	 * @return
 	 */
 	@PostMapping("/signup")
-	public String signUp(@Valid @ModelAttribute User user, BindingResult bindingResult, HttpSession session) {
+	public String signUp(@Validated( { Group1.class }) @ModelAttribute User user, BindingResult bindingResult, HttpSession session) {
 		System.out.println("in POST /signup");
 
 		User userNameUser = userService.findUserByUsername(user.getUsername());
@@ -114,51 +123,36 @@ public class UserController {
 
 		// check username been used or not
 		if (userNameUser != null) {
-			System.out.println("username repeated <<<<<<<<");
-			bindingResult.rejectValue("username", "error.user",
-					"There is already a user registered with the same username");
+			bindingResult.rejectValue("username", "error.user", "There is already a user registered with the same username");
 			return "sign-up";
 		}
 
 		// check email been used or not
 		if (userEmailUser != null) {
-			System.out.println("email repeated <<<<<<<<");
 			bindingResult.rejectValue("email", "error.user", "There is already a user registered with the same email");
 			return "sign-up";
 		}
 
-		// when input has length error
+		// when input has length error or email form error
 		if (bindingResult.hasErrors()) {
 			return "sign-up";
 		}
 
 		// session
 		session.setAttribute("user", user);
-
+		
+		// no error, continue to next step
 		return "redirect:/signup2";
 	}
 
 	/**
 	 * 
 	 * @param model
-	 * @param session
 	 * @return
 	 */
 	@GetMapping("/signup2")
-	public String toSignUp2(Model model, HttpSession session) {
+	public String toSignUp2(Model model) {
 		System.out.println("in GET /signup2");
-
-		User user = (User) session.getAttribute("user");
-		model.addAttribute("user", user);
-		System.out.println(user);
-		
-		if (user.getProgrammingLanguage() == null) {
-			return "sign-up2";
-		} else {
-			// split programming languages to array
-			String[] languages = user.getProgrammingLanguage().split(",");
-			model.addAttribute("pl", languages);
-		}
 
 		return "sign-up2";
 	}
@@ -167,16 +161,20 @@ public class UserController {
 	 * 
 	 * @param user
 	 * @param bindingResult
-	 * @param request
 	 * @param session
 	 * @return
 	 */
 	@PostMapping("/signup2")
-	public String signUp2(@Valid @ModelAttribute User user, BindingResult bindingResult, HttpServletRequest request,
-			HttpSession session) {
+	public String signUp2(@Validated( { Group2.class }) @ModelAttribute User user, BindingResult bindingResult, HttpSession session) {
 		System.out.println(">>>>>>>>>> POST in /signup2");
 		session.setAttribute("user", user);
 		System.out.println(user);
+		
+		// when progLang input is empty
+		if (bindingResult.hasErrors()) {
+			System.out.println("error in signup2");
+			return "sign-up2";
+		}
 
 		return "redirect:/confirm";
 	}
@@ -202,8 +200,7 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping("/confirm")
-	public String confirm(@ModelAttribute User user, @RequestParam String action,
-			HttpSession session, SessionStatus status) {
+	public String confirm(@ModelAttribute User user, @RequestParam String action, HttpSession session, SessionStatus status) {
 		System.out.println(">>>>>>>>>> in POST /confirm");
 
 		System.out.println("action >>>>>> " + action);
@@ -217,7 +214,10 @@ public class UserController {
 			// kill session
 			status.setComplete();
 			returnStr = "redirect:/signup-succeeded";
-		} else if (action.equals("Back to SignUp")) {
+		} 
+		// when user find something wrong, and want to correct
+		// click "Back to SignUp" button
+		else if (action.equals("Back to SignUp")) {
 			System.out.println(">>>>>>>> in Back to SignUp");
 			returnStr = "redirect:/signup";
 		}
@@ -225,9 +225,6 @@ public class UserController {
 		// click "Back to SignUp2" button
 		else if (action.equals("Back to SignUp2")) {
 			System.out.println("in Back to SignUp2");
-
-			System.out.println();
-
 			returnStr = "redirect:/signup2";
 		}
 
@@ -243,6 +240,10 @@ public class UserController {
 		return "signup-succeeded";
 	}
 
+	/****************************************************************************************/
+	/***********the following functions are out of request of OJT (can be skipped)***********/
+	/****************************************************************************************/
+	
 	/**
 	 * list all the user
 	 * 

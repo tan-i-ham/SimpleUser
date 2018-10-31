@@ -47,6 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		    .antMatchers("/", "/login", "/signup", "/signup2", "/confirm", "/succeeded", "/signup-succeeded", "/error").permitAll()  //  the "/" and "/login" paths are configured to not require any authentication.
 		    .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
 		    .antMatchers("/show").hasAuthority("ROLE_ADMIN")
+		    .antMatchers("/edit").hasAuthority("ROLE_USER")
 		    .anyRequest().authenticated().and().csrf().disable()
 		.formLogin()
 		    .loginPage("/login").failureUrl("/login?error=true")
