@@ -23,6 +23,12 @@
 .lh-condensed {
 	line-height: 1.25;
 }
+p.length-error {
+	color: red;
+}
+.mustinput{
+	color: red;
+}
 </style>
 </head>
 <body class="bg-light">
@@ -76,39 +82,41 @@
 						</div>
 					</div>
 					<hr class="mb-4">
-					<label for="programming_language" class="d-block">Programming Language</label>
+					<label for="programming_language" class="d-block">Programming Language<span class="mustinput">*</span></label>
+					<p class="length-error mustinput" th:if="${#fields.hasErrors('progLang')}" th:errors="*{progLang}">progLang
+							Error</p>
 					<div class="form-check form-check-inline">
 						<input class="form-check-input" type="checkbox" id="python" value="python"
-							th:field="*{programmingLanguage}"> <label class="form-check-label" for="python">Python</label>
+							th:field="*{progLang}"> <label class="form-check-label" for="python">Python</label>
 					</div>
 					<div class="form-check form-check-inline">
 						<input class="form-check-input" type="checkbox" id="java" value="java"
-							th:field="*{programmingLanguage}"> <label class="form-check-label" for="java">Java</label>
+							th:field="*{progLang}"> <label class="form-check-label" for="java">Java</label>
 					</div>
 					<div class="form-check form-check-inline">
 						<input class="form-check-input" type="checkbox" id="c" value="c"
-							th:field="*{programmingLanguage}"> <label class="form-check-label" for="c">C</label>
+							th:field="*{progLang}"> <label class="form-check-label" for="c">C</label>
 					</div>
 					<div class="form-check form-check-inline">
 						<input class="form-check-input" type="checkbox" id="cplusplus" value="cplusplus"
-							th:field="*{programmingLanguage}"> <label class="form-check-label" for="cplusplus">C++</label>
+							th:field="*{progLang}"> <label class="form-check-label" for="cplusplus">C++</label>
 					</div>
 					<div class="form-check form-check-inline">
 						<input class="form-check-input" type="checkbox" id="kotlin" value="kotlin"
-							th:field="*{programmingLanguage}"> <label class="form-check-label" for="kotlin">Kotlin</label>
+							th:field="*{progLang}"> <label class="form-check-label" for="kotlin">Kotlin</label>
 					</div>
 					<div class="form-check form-check-inline">
 						<input class="form-check-input" type="checkbox" id="javascript" value="javascript"
-							th:field="*{programmingLanguage}"> <label class="form-check-label" for="javascript">JavaScript</label>
+							th:field="*{progLang}"> <label class="form-check-label" for="javascript">JavaScript</label>
 					</div>
 					<div class="form-check form-check-inline">
 						<input class="form-check-input" type="checkbox" id="go" value="go"
-							th:field="*{programmingLanguage}"> <label class="form-check-label" for="go">Go</label>
+							th:field="*{progLang}"> <label class="form-check-label" for="go">Go</label>
 					</div>
 					<div class="form-check form-check-inline">
 						<input class="form-check-input" type="checkbox" id="other" value="other" 
 							onclick="openInput()"
-							aria-label="Checkbox for following text input" th:field="*{programmingLanguage}"> <label
+							aria-label="Checkbox for following text input" th:field="*{progLang}"> <label
 							class="form-check-label" for="other">Other</label> <input type="text"
 							class="form-control form-control-sm ml-2 other" id="oth_input"
 							aria-label="Text input with checkbox"  onkeyup="changeDisabled()" disabled>
@@ -119,7 +127,7 @@
 							<button class="btn btn-primary btn-lg btn-block" type="submit" onclick="check()">Confirm</button>
 						</div>
 					</div>
-					<h4 class="d-none" id="lanStr" th:text="${user.programmingLanguage}"></h4>
+					<h4 class="d-none" id="lanStr" th:text="${user.progLang}"></h4>
 				</form>
 			</div>
 		</div>

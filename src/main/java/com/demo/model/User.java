@@ -29,11 +29,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import lombok.Data;
-
 @Entity
-@Table(name = "user", uniqueConstraints = { @UniqueConstraint(columnNames = { "username" }),
-		@UniqueConstraint(columnNames = { "email" }) })
+@Table(name = "user", uniqueConstraints = { @UniqueConstraint(columnNames = { "username" }), @UniqueConstraint(columnNames = { "email" }) })
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = { "createdAt", "updatedAt" }, allowGetters = true)
 public class User {
@@ -43,18 +40,18 @@ public class User {
 	private Long id;
 
 	@NotNull
-	@Size(min = 6, max = 30, message = "Enter between 6~30 characters") // length validation
+	@Size(min = 6, max = 30, message = "Enter between 6~30 characters", groups = { Group1.class }) // length validation
 	@Column(name = "username")
 	private String username;
 
 	@NotNull
-	@Size(min = 8, message = "Enter at least 8 characters") // length validation
+	@Size(min = 8, message = "Enter at least 8 characters", groups = { Group1.class }) // length validation
 	@Column(name = "password")
 	private String password;
 
 	@NaturalId
 	@NotBlank
-	@Email
+	@Email(message = "Enter the right format of email", groups = { Group1.class })
 	@Column(name = "email")
 	private String email;
 
@@ -70,8 +67,9 @@ public class User {
 	@Column(name = "country")
 	private String country;
 
-	@Column(name = "programming_language")
-	private String programmingLanguage;
+	@NotNull(message = "choose at least one ", groups = { Group2.class })
+	@Column(name = "prog_lang")
+	private String progLang;
 
 	@Column(name = "active")
 	private int active;
@@ -186,19 +184,18 @@ public class User {
 		this.country = country;
 	}
 
-	public String getProgrammingLanguage() {
-		return programmingLanguage;
+	public String getProgLang() {
+		return progLang;
 	}
 
-	public void setProgrammingLanguage(String programmingLanguage) {
-		this.programmingLanguage = programmingLanguage;
+	public void setProgLang(String progLang) {
+		this.progLang = progLang;
 	}
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", password=" + password + ", email=" + email
-				+ ", firstname=" + firstname + ", lastname=" + lastname + ", gender=" + gender + ", country=" + country
-				+ ", programmingLanguage=" + programmingLanguage + ", active=" + active + ", roles=" + roles + "]";
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", email=" + email + ", firstname=" + firstname + ", lastname="
+				+ lastname + ", gender=" + gender + ", country=" + country + ", progLang=" + progLang + ", roles=" + roles + "]";
 	}
 
 }
