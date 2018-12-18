@@ -36,11 +36,11 @@
 						sec:authorize="hasRole('ROLE_ADMIN')">All data</a></li>
 				</ul>
 			</div>
-			<div class="d-inline" sec:authorize="isAuthenticated()">
+			<!--  <div class="d-inline" sec:authorize="isAuthenticated()">
 				<span class="navbar-text mr-2">Hi! </span> <span class="navbar-text mr-2"
 					th:text="${currentUser.firstname}"> firstname </span> <span class="navbar-text mr-2"
 					th:text="${currentUser.lastname}"> lastname </span>
-			</div>
+			</div>-->
 			<div class="d-inline">
 				<a class="nav-link d-inline" href="/logout" sec:authorize="isAuthenticated()">
 					<button class="btn btn-outline-primary my-2 my-sm-0" value="Logout">Logout</button>
@@ -59,7 +59,7 @@
 	<div class="container">
 		<div class="row justify-content-md-center ">
 			<div class="col-md-8 order-md-1">
-				<form class="needs-validation" method="POST" th:action="@{/edit}" th:object="${user}">
+				<form class="needs-validation" method="POST" th:action="@{/update(id=${user.id})}" th:object="${user}">
 					<input type="hidden" name="id" th:value="*{id}" />
 					<div class="row form-group">
 						<div class="col-md-12">
@@ -81,7 +81,7 @@
 						<div class="col-md-5">
 							<div class="col-md-8 mb-3">
 								<label for="firstName">First name</label> <input type="text" class="form-control"
-									id="firstName" th:value="*{firstname}">
+									id="firstName" th:field="*{firstname}">
 							</div>
 						</div>
 						<div class="col-md-5">
@@ -95,8 +95,7 @@
 					<div class="form-group">
 						<div class="col-sm-offset-2 col-sm-10">
 							<button class="btn btn-primary btn-lg btn-block" type="submit" name="action" value="Save">Save</button>
-							<input type="submit" value="Submit" class="btn btn-info" /> &nbsp; &nbsp; &nbsp; <a
-								th:href="@{/}" class="btn btn-info">Back</a>
+							<a th:href="@{/}" class="btn btn-info">Back</a>
 						</div>
 					</div>
 				</form>

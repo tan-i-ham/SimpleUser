@@ -24,7 +24,8 @@ public interface UserService {
 	
 	void saveUser(User user);
 
-	void preEdit(User user);
-	
+	List<User> findAll();
+
+
 
 }

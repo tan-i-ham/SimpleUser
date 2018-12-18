@@ -3,6 +3,8 @@ package com.demo.controller;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -50,7 +53,8 @@ public class UserController {
 			returnPage = "index";
 		} else { // when some user is login
 			User user = (User) userService.findUserByUsername(currentUser.getUsername());
-			// set new attribute 'currentUser' to model, in order to show user's info on navbar
+			// set new attribute 'currentUser' to model, in order to show user's info on
+			// navbar
 			model.addAttribute("currentUser", user);
 			// check if this user has any prog_lan skill
 			// if not then return "index.html"
@@ -92,7 +96,7 @@ public class UserController {
 	@GetMapping("/signup")
 	public String toSignUp(Model model) {
 		System.out.println("in GET /signup");
-		
+
 		// not a new registration process, is return back from confirm page
 		if (model.containsAttribute("user")) {
 			System.out.println("user already create");
@@ -105,17 +109,16 @@ public class UserController {
 
 	/**
 	 * 
-	 * user click the submit button in sign-up.html
-	 * action="/signup"
-	 * method="POST" 
-	 *  
+	 * user click the submit button in sign-up.html action="/signup" method="POST"
+	 * 
 	 * @param user
 	 * @param bindingResult : to validate the input string is atch to the rule
 	 * @param session
 	 * @return
 	 */
 	@PostMapping("/signup")
-	public String signUp(@Validated( { Group1.class }) @ModelAttribute User user, BindingResult bindingResult, HttpSession session) {
+	public String signUp(@Validated({ Group1.class }) @ModelAttribute User user, BindingResult bindingResult,
+			HttpSession session) {
 		System.out.println("in POST /signup");
 
 		User userNameUser = userService.findUserByUsername(user.getUsername());
@@ -123,7 +126,8 @@ public class UserController {
 
 		// check username been used or not
 		if (userNameUser != null) {
-			bindingResult.rejectValue("username", "error.user", "There is already a user registered with the same username");
+			bindingResult.rejectValue("username", "error.user",
+					"There is already a user registered with the same username");
 			return "sign-up";
 		}
 
@@ -140,7 +144,7 @@ public class UserController {
 
 		// session
 		session.setAttribute("user", user);
-		
+
 		// no error, continue to next step
 		return "redirect:/signup2";
 	}
@@ -165,11 +169,12 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping("/signup2")
-	public String signUp2(@Validated( { Group2.class }) @ModelAttribute User user, BindingResult bindingResult, HttpSession session) {
+	public String signUp2(@Validated({ Group2.class }) @ModelAttribute User user, BindingResult bindingResult,
+			HttpSession session) {
 		System.out.println(">>>>>>>>>> POST in /signup2");
 		session.setAttribute("user", user);
 		System.out.println(user);
-		
+
 		// when progLang input is empty
 		if (bindingResult.hasErrors()) {
 			System.out.println("error in signup2");
@@ -200,7 +205,8 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping("/confirm")
-	public String confirm(@ModelAttribute User user, @RequestParam String action, HttpSession session, SessionStatus status) {
+	public String confirm(@ModelAttribute User user, @RequestParam String action, HttpSession session,
+			SessionStatus status) {
 		System.out.println(">>>>>>>>>> in POST /confirm");
 
 		System.out.println("action >>>>>> " + action);
@@ -214,7 +220,7 @@ public class UserController {
 			// kill session
 			status.setComplete();
 			returnStr = "redirect:/signup-succeeded";
-		} 
+		}
 		// when user find something wrong, and want to correct
 		// click "Back to SignUp" button
 		else if (action.equals("Back to SignUp")) {
@@ -241,9 +247,11 @@ public class UserController {
 	}
 
 	/****************************************************************************************/
-	/***********the following functions are out of request of OJT (can be skipped)***********/
+	/***********
+	 * the following functions are out of request of OJT (can be skipped)
+	 ***********/
 	/****************************************************************************************/
-	
+
 	/**
 	 * list all the user
 	 * 
@@ -271,19 +279,20 @@ public class UserController {
 	 * @param id    : the id of a data to be edited
 	 * @return
 	 */
-	@GetMapping("/toEdit")
-	public String toEdit(Model model, Long id, @AuthenticationPrincipal UserDetails currentUser) {
+	@GetMapping("toEdit/{id}")
+	public String toEdit(@PathVariable("id") long id, Model model, @AuthenticationPrincipal UserDetails currentUser) {
+		User user = userService.findUserById(id)
+				.orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
 
+		
+		
 		String returnPage = "";
 		if (currentUser == null) {
 			returnPage = "user-edit";
 		} else {
-			User user = (User) userService.findUserByUsername(currentUser.getUsername());
-
-			String a = user.getPassword();
-			System.out.println(a);
+		
 			userService.findUserById(id);
-			model.addAttribute("currentUser", user);
+			model.addAttribute("currentUser", currentUser);
 			model.addAttribute("user", user);
 			returnPage = "user-edit";
 		}
@@ -298,12 +307,21 @@ public class UserController {
 	 * @param user
 	 * @return "redirect:/show"
 	 */
-	@PostMapping("/edit")
-	public String edit(User user) {
-		userService.edit(user);
-		return "redirect:/show";
+	@PostMapping("/update")
+	public String updateUser( @ModelAttribute @Valid User user, 
+	  BindingResult result, Model model) {
+	    if (result.hasErrors()) {
+	        return "user-edit";
+	    }
+//	    System.out.println(user.getFirstname());
+//	    user.setFirstname(user.getFirstname());
+	    model.addAttribute("user",user);
+	    userService.save(user);
+	    
+//	    model.addAttribute("users", userService.findAll());
+	    return "redirect:/show";
 	}
-
+	
 	/**
 	 * delete a user, userService delete method execute
 	 * 
