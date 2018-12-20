@@ -5,24 +5,48 @@
 <title>home page</title>
 <!-- Required meta tags -->
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <!-- Bootstrap CSS -->
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
 	integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
 	crossorigin="anonymous">
 <!-- local css -->
-<!-- <link rel="stylesheet" type="text/css" th:href="@{css/style.css}" /> -->
+<!-- Custom styles for this template -->
+<!-- Latest compiled and minified CSS -->
+<style>
+.container {
+	max-width: 960px;
+}
+
+.lh-condensed {
+	line-height: 1.25;
+}
+
+/* input[disabled].ro {
+	border: none;
+	background-color: transparent;
+	border: 0;
+	font-size: 1.5em;
+	sont-weight: bold;
+} */
+input[type=text] {
+	font-size: 1.5em;
+	sont-weight: bold;
+}
+</style>
 </head>
 <body>
 	<!-- navbar -->
 	<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
 		<div class="container">
 			<a class="navbar-brand" href="/"><img
-				src="https://seeklogo.com/images/R/rakuten-logo-A75F21521D-seeklogo.com.png" width="30"
-				height="30" alt="Home"></a>
-			<button class="navbar-toggler mr-0" type="button" data-toggle="collapse"
-				data-target="#navbarsExample07" aria-controls="navbarsExample07" aria-expanded="false"
+				src="https://seeklogo.com/images/R/rakuten-logo-A75F21521D-seeklogo.com.png"
+				width="30" height="30" alt="Home"></a>
+			<button class="navbar-toggler mr-0" type="button"
+				data-toggle="collapse" data-target="#navbarsExample07"
+				aria-controls="navbarsExample07" aria-expanded="false"
 				aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
@@ -32,22 +56,26 @@
 					<li class="nav-item"><a class="p-2 text-dark" href="/contact">Contact</a></li>
 					<li class="nav-item"><a class="p-2 text-dark" href="/to-do"
 						sec:authorize="isAuthenticated()">TO-DO</a></li>
-					<li class="nav-item dropdown"><a class="p-2 text-dark" href="/show"
-						sec:authorize="hasRole('ROLE_ADMIN')">All data</a></li>
+					<li class="nav-item dropdown"><a class="p-2 text-dark"
+						href="/show" sec:authorize="hasRole('ROLE_ADMIN')">All data</a></li>
 				</ul>
 			</div>
-			<div class="d-inline" sec:authorize="isAuthenticated()">
+			<!--  <div class="d-inline" sec:authorize="isAuthenticated()">
 				<span class="navbar-text mr-2">Hi! </span> <span class="navbar-text mr-2"
 					th:text="${currentUser.firstname}"> firstname </span> <span class="navbar-text mr-2"
 					th:text="${currentUser.lastname}"> lastname </span>
-			</div>
+			</div>-->
 			<div class="d-inline">
-				<a class="nav-link d-inline" href="/logout" sec:authorize="isAuthenticated()">
+				<a class="nav-link d-inline" href="/logout"
+					sec:authorize="isAuthenticated()">
 					<button class="btn btn-outline-primary my-2 my-sm-0" value="Logout">Logout</button>
-				</a> <a class="nav-link d-inline" href="/login" sec:authorize="isAnonymous()">
+				</a> <a class="nav-link d-inline" href="/login"
+					sec:authorize="isAnonymous()">
 					<button class="btn btn-outline-primary my-2 my-sm-0" value="login">Login</button>
-				</a> <a class="nav-link d-inline" href="/signup" sec:authorize="isAnonymous()">
-					<button class="btn btn-outline-primary my-2 my-sm-0" value="Sign Up">Sign Up</button>
+				</a> <a class="nav-link d-inline" href="/signup"
+					sec:authorize="isAnonymous()">
+					<button class="btn btn-outline-primary my-2 my-sm-0"
+						value="Sign Up">Sign Up</button>
 				</a>
 			</div>
 		</div>
@@ -59,49 +87,224 @@
 	<div class="container">
 		<div class="row justify-content-md-center ">
 			<div class="col-md-8 order-md-1">
-				<form class="needs-validation" method="POST" th:action="@{/edit}" th:object="${user}">
+				<form class="needs-validation" method="POST"
+					th:action="@{/update(id=${user.id})}" th:object="${user}">
 					<input type="hidden" name="id" th:value="*{id}" />
-					<div class="row form-group">
-						<div class="col-md-12">
+
+					<div class="row form-group ml-3">
+						<div class="col-md-12 ">
 							<label for="username">Username</label>
-							<div class="col-md-8 mb-3">
-								<input type="text" class="form-control" id="username" th:value="*{username}">
+							<div class="col-md-10 mb-3">
+								<input type="text"
+									class="form-control border-bottom border-primary rounded-0 form-control-plaintext ro"
+									id="username" th:field="*{username}">
 							</div>
 							<label for="password">Password</label>
-							<div class="col-md-8 mb-3">
-								<input type="text" class="form-control" id="password" th:value="*{password}">
+							<div class="col-md-10 mb-3">
+								<input type="text"
+									class="form-control border-bottom border-primary rounded-0 form-control-plaintext ro"
+									id="password" th:field="*{password}" disabled>
 							</div>
 							<label for="email">Email</label>
-							<div class="col-md-8 mb-3">
-								<input type="text" class="form-control" id="email" th:value="*{email}">
+							<div class="col-md-10 mb-3">
+								<input type="text"
+									class="form-control border-bottom border-primary rounded-0 form-control-plaintext ro"
+									id="email" th:field="*{email}">
 							</div>
 						</div>
 					</div>
-					<div class="row">
-						<div class="col-md-5">
-							<div class="col-md-8 mb-3">
-								<label for="firstName">First name</label> <input type="text" class="form-control"
-									id="firstName" th:value="*{firstname}">
+
+					<div class="row ml-3">
+						<div class="col-md-6">
+							<label for="firstName">First name</label>
+							<div class="col-md-10 mb-3">
+								<input type="text"
+									class="form-control border-bottom border-primary rounded-0 form-control-plaintext ro"
+									id="firstName" th:field="*{firstname}">
 							</div>
 						</div>
-						<div class="col-md-5">
+						<div class="col-md-6">
 							<label for="lastName">Last name</label>
-							<div class="col-md-8 mb-3">
-								<input type="text" class="form-control" id="lastName" th:value="*{lastname}">
+							<div class="col-md-10 mb-3">
+								<input type="text"
+									class="form-control border-bottom border-primary rounded-0 form-control-plaintext ro"
+									id="lastName" th:field="*{lastname}">
 							</div>
 						</div>
-						<div class="col-md-2"></div>
 					</div>
-					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-10">
-							<button class="btn btn-primary btn-lg btn-block" type="submit" name="action" value="Save">Save</button>
-							<input type="submit" value="Submit" class="btn btn-info" /> &nbsp; &nbsp; &nbsp; <a
-								th:href="@{/}" class="btn btn-info">Back</a>
+
+					<div class="row ml-3">
+						<div class="col-md-6 mb-3 ">
+							<label for="" class="d-block">Gender</label>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio"
+									name="genderOptions" id="male" value="male"
+									th:field="*{gender}"> <label class="form-check-label"
+									for="male">Male</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio"
+									name="genderOptions" id="female" value="female"
+									th:field="*{gender}"> <label class="form-check-label"
+									for="female">Female</label>
+							</div>
+						</div>
+
+
+						<div class="col-md-6 mb-3">
+							<label for="country">Country</label> <select class="form-control"
+								id="country" name="country" th:field="*{country}">
+								<option value="Japan" th:selected="selected">Japan</option>
+								<option value="Taiwan" th:selected="selected">Taiwan</option>
+								<option value="India" th:selected="selected">India</option>
+								<option value="Korea" th:selected="selected">Korea</option>
+								<option value="United States" th:selected="selected">United
+									States</option>
+								<option value="United Kingdom" th:selected="selected">United
+									Kingdom</option>
+								<option value="Afghanistan" th:selected="selected">Afghanistan</option>
+								<option value="Albania" th:selected="selected">Albania</option>
+								<option value="Algeria" th:selected="selected">Algeria</option>
+								<option value="American Samoa" th:selected="selected">American
+									Samoa</option>
+							</select>
+						</div>
+					</div>
+					<div class="row form-group ml-3">
+						<label for="programming_language" class="d-block">Programming
+							Language<span class="mustinput">*</span>
+						</label>
+						<p class="length-error mustinput"
+							th:if="${#fields.hasErrors('progLang')}" th:errors="*{progLang}">progLang
+							Error</p>
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="checkbox" id="python"
+								value="python" th:field="*{progLang}"> <label
+								class="form-check-label" for="python">Python</label>
+						</div>
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="checkbox" id="java"
+								value="java" th:field="*{progLang}"> <label
+								class="form-check-label" for="java">Java</label>
+						</div>
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="checkbox" id="c" value="c"
+								th:field="*{progLang}"> <label class="form-check-label"
+								for="c">C</label>
+						</div>
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="checkbox" id="cplusplus"
+								value="cplusplus" th:field="*{progLang}"> <label
+								class="form-check-label" for="cplusplus">C++</label>
+						</div>
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="checkbox" id="kotlin"
+								value="kotlin" th:field="*{progLang}"> <label
+								class="form-check-label" for="kotlin">Kotlin</label>
+						</div>
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="checkbox" id="javascript"
+								value="javascript" th:field="*{progLang}"> <label
+								class="form-check-label" for="javascript">JavaScript</label>
+						</div>
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="checkbox" id="go"
+								value="go" th:field="*{progLang}"> <label
+								class="form-check-label" for="go">Go</label>
+						</div>
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="checkbox" id="other"
+								value="other" onclick="openInput()"
+								aria-label="Checkbox for following text input"
+								th:field="*{progLang}"> <label class="form-check-label"
+								for="other">Other</label> <input type="text"
+								class="form-control form-control-sm ml-2 other" id="oth_input"
+								aria-label="Text input with checkbox" onkeyup="changeDisabled()"
+								disabled>
+						</div>
+						<hr class="mb-4">
+						
+						<h4 class="d-none" id="lanStr" th:text="${user.progLang}"></h4>
+					</div>
+					
+					<div class="row text-center  justify-content-center">
+						<div class="col-md-4 text-center ">
+							<button class="btn btn-outline-dark btn-lg btn-block "
+								type="submit" name="action" value="save">Save</button>
+						</div>
+						<div class="col-md-4 text-center ">
+							<button class="btn btn-outline-dark btn-lg btn-block"
+								type="submit" name="action" value="back">Back</button>
 						</div>
 					</div>
 				</form>
 			</div>
 		</div>
 	</div>
+	<!-- Bootstrap core JavaScript
+    ================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+	<script>
+		$(document).ready(
+			function() {
+				var languages = $('#lanStr').text().split(",");
+				var checkLen = languages.length;
+				if (checkLen > 1) {
+					var count = checkLen;
+					for ( var i in languages) {
+						if (document.getElementById(languages[i]) != null) {
+							count--;
+							document.getElementById(languages[i]).checked = true;
+						}
+					}
+					// means the other checkbox has been check
+					if (count != 0) {
+						document.getElementById("other").checked = true;
+						document.getElementById("oth_input").value = languages[checkLen - 1];
+					}
+				}
+				
+				if($('#oth_input').val()){
+					$('#oth_input').prop('disabled', false);
+				}
+				
+		});
+	
+		function openInput() {
+		    var checkBox = document.getElementById("other");
+		    var textInput = document.getElementById("oth_input");
+
+		    if (checkBox.checked == true){
+		    	textInput.disabled = false;
+		    } else {
+		    	textInput.value="";
+		    	textInput.disabled = true;
+		    }
+		}
+		
+		function changeDisabled(){
+			 var box = document.getElementById("other");
+			 var x = document.getElementById("oth_input");
+			 
+			 if(!(x.value)){
+			    box.checked = false;
+			    x.disabled = true;
+			 }
+		}
+		
+		function check() {
+			var otherCheckBox = document.getElementById("other");
+			var checked = otherCheckBox.checked;
+			if (checked) {
+				var otherStr = document.getElementById("oth_input").value;
+				otherCheckBox.value = otherStr;
+			}
+		}
+		
+		
+	</script>
 </body>
 </html>

@@ -47,9 +47,12 @@
 				</ul>
 			</div>
 			<div class="d-inline" sec:authorize="isAuthenticated()">
-				<span class="navbar-text mr-2">Hi! </span> <span class="navbar-text mr-2"
-					th:text="${currentUser.firstname}"> firstname </span> <span class="navbar-text mr-2"
-					th:text="${currentUser.lastname}"> lastname </span>
+				
+				<span class="navbar-text mr-2">Hi! </span> 
+				<a th:href="@{/toEdit/{id}(id=${currentUser.id})}" sec:authorize="isAuthenticated()">
+				    <span class="navbar-text mr-2" th:text="${currentUser.firstname}"> firstname </span> 
+				    <span class="navbar-text mr-2" th:text="${currentUser.lastname}"> lastname </span>
+				</a>
 			</div>
 			<div class="d-inline">
 				<a class="nav-link d-inline" href="/logout" sec:authorize="isAuthenticated()">

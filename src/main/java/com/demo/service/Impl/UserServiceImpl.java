@@ -35,15 +35,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 
 	@Override
-	public void preEdit(User user) {
-		
-	}
-	
-	@Override
 	public void edit(User user) {
 		userRepository.save(user);
 	}
 
+	
+	
 	@Override
 	public void delete(Long id) {
 		userRepository.deleteById(id);
@@ -75,9 +72,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
 		userRepository.save(user);
 	}
+	
+
 
 	@Override
 	public UserDetails loadUserByUsername(String username) {
 		return (UserDetails) userRepository.findByUsername(username);
+	}
+
+	@Override
+	public List<User> findAll() {
+		// TODO Auto-generated method stub
+		return userRepository.findAll();
 	}
 }
