@@ -273,10 +273,10 @@ public class UserController {
 	}
 
 	/**
-	 * edit a data
 	 * 
+	 * @param id
 	 * @param model
-	 * @param id    : the id of a data to be edited
+	 * @param currentUser
 	 * @return
 	 */
 	@GetMapping("toEdit/{id}")
