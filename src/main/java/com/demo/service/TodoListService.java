@@ -28,7 +28,7 @@ public class TodoListService {
 		return todoListRepository.saveAll(todoLists);
 	}
 
-	public List<TodoList> getAllCommentsForToday() {
+	public List<TodoList> getAllTodoListsForToday() {
 		LocalDate localDate = LocalDate.now();
 		return todoListRepository.findByCreatedYearAndMonthAndDay(
 				localDate.getYear(), 
