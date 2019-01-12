@@ -34,7 +34,7 @@ public class TodoListController {
 	public String viewTodoPage(Model model) {
 		model.addAttribute("time", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 
-		List<TodoList> allTodoLists = todoListService.getAllTodoListsForToday();
+		List<TodoList> allTodoLists = todoListService.getAllTodoList();
 		Map<TodoListType, List<TodoList>> groupedTodoLists = allTodoLists.stream()
 				.collect(Collectors.groupingBy(TodoList::getType));
 

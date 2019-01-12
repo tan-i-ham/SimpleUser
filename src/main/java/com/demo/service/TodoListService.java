@@ -27,6 +27,10 @@ public class TodoListService {
 		LOGGER.info("Saving {}", todoLists);
 		return todoListRepository.saveAll(todoLists);
 	}
+	
+	public List<TodoList> getAllTodoList(){
+		return todoListRepository.findAll();
+	}
 
 	public List<TodoList> getAllTodoListsForToday() {
 		LocalDate localDate = LocalDate.now();
