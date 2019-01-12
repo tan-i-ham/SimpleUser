@@ -172,7 +172,7 @@ input[type=text] {
 					</div>
 					<div class="row form-group ml-3">
 						<label for="programming_language" class="d-block">Programming
-							Language<span class="mustinput">*</span>
+							Language
 						</label>
 						<p class="length-error mustinput"
 							th:if="${#fields.hasErrors('progLang')}" th:errors="*{progLang}">progLang
@@ -230,11 +230,11 @@ input[type=text] {
 					<div class="row text-center  justify-content-center">
 						<div class="col-md-4 text-center ">
 							<button class="btn btn-outline-dark btn-lg btn-block "
-								type="submit" name="action" value="save">Save</button>
+								type="submit" name="action" value="Save">Save</button>
 						</div>
 						<div class="col-md-4 text-center ">
 							<button class="btn btn-outline-dark btn-lg btn-block"
-								type="submit" name="action" value="back">Back</button>
+								type="submit" name="action" value="Back" onclick="goBack()">Back</button>
 						</div>
 					</div>
 				</form>
@@ -248,6 +248,12 @@ input[type=text] {
 		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
 		crossorigin="anonymous"></script>
 	<script>
+		function goBack() {
+			console.log("back");
+		    window.history.back();
+		}
+		
+		// program language checkbox 
 		$(document).ready(
 			function() {
 				var languages = $('#lanStr').text().split(",");

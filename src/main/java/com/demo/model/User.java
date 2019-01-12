@@ -29,10 +29,13 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import lombok.Data;
+
 @Entity
 @Table(name = "user", uniqueConstraints = { @UniqueConstraint(columnNames = { "username" }), @UniqueConstraint(columnNames = { "email" }) })
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = { "createdAt", "updatedAt" }, allowGetters = true)
+@Data
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -87,6 +90,21 @@ public class User {
 	@Temporal(TemporalType.TIMESTAMP)
 	@LastModifiedDate
 	private Date updatedAt;
+
+	public User() {
+		
+	}
+	
+	public User(
+			@NotNull @Size(min = 6, max = 30, message = "Enter between 6~30 characters", groups = Group1.class) String username,
+			@NotNull @Size(min = 8, message = "Enter at least 8 characters", groups = Group1.class) String password,
+			@NotBlank @Email(message = "Enter the right format of email", groups = Group1.class) String email) {
+		super();
+	
+		this.username = username;
+		this.password = password;
+		this.email = email;
+	}
 
 	public Long getId() {
 		return id;

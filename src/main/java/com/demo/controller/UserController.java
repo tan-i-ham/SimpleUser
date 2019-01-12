@@ -1,7 +1,10 @@
 package com.demo.controller;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -11,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -284,13 +288,11 @@ public class UserController {
 		User user = userService.findUserById(id)
 				.orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
 
-		
-		
 		String returnPage = "";
 		if (currentUser == null) {
 			returnPage = "user-edit";
 		} else {
-		
+
 			userService.findUserById(id);
 			model.addAttribute("currentUser", currentUser);
 			model.addAttribute("user", user);
@@ -302,26 +304,45 @@ public class UserController {
 	}
 
 	/**
-	 * userService edit method execute
 	 * 
 	 * @param user
-	 * @return "redirect:/show"
+	 * @param action
+	 * @param result
+	 * @param model
+	 * @param request
+	 * @return
 	 */
 	@PostMapping("/update")
-	public String updateUser( @ModelAttribute @Valid User user, 
-	  BindingResult result, Model model) {
-	    if (result.hasErrors()) {
-	        return "user-edit";
-	    }
-//	    System.out.println(user.getFirstname());
-//	    user.setFirstname(user.getFirstname());
-	    model.addAttribute("user",user);
-	    userService.save(user);
-	    
-//	    model.addAttribute("users", userService.findAll());
-	    return "redirect:/show";
+	public String updateUser(@ModelAttribute @Valid User user, @RequestParam String action, BindingResult result,
+			Model model, HttpServletRequest request, Authentication authentication) {
+		if (result.hasErrors()) {
+			return "user-edit";
+		}
+		model.addAttribute("user", user);
+		Collection<SimpleGrantedAuthority> authorities = 
+				(Collection<SimpleGrantedAuthority>) SecurityContextHolder.getContext()
+														.getAuthentication().getAuthorities();
+		
+		if (action.equals("Save")) {
+			userService.save(user);
+
+			// when user has admin role, redirect to show
+			String role = authorities.toArray()[0].toString();
+			String temp = "ROLE_ADMIN";
+			if (role.equals(temp)) {
+				System.out.println("role admin");
+				return "redirect:/show";
+			}
+			else {
+				return "redirect:/";
+			}
+		}
+
+		
+		return "redirect:/";
+
 	}
-	
+
 	/**
 	 * delete a user, userService delete method execute
 	 * 
