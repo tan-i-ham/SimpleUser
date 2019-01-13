@@ -5,10 +5,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -72,12 +79,41 @@ public class TodoListController {
 
 	private TodoList getTodoList(String todoList, TodoListType todoListType) {
 		// TODO Auto-generated method stub
-		
+
 		TodoList todoListObj = new TodoList();
 		todoListObj.setContent(todoList);
 		todoListObj.setType(todoListType);
-		
+
 		return todoListObj;
+	}
+
+	@GetMapping(value = "/listTodos")
+	public String listTodp(Model model, @RequestParam("page") Optional<Integer> page,
+			@RequestParam("size") Optional<Integer> size) {
+		int currentPage = page.orElse(1);
+		int pageSize = size.orElse(5);
+
+		Page<TodoList> todoPage = todoListService.findPaginated(PageRequest.of(currentPage - 1, pageSize));
+
+		model.addAttribute("todoPage", todoPage);
+
+		int totalPages = todoPage.getTotalPages();
+		if (totalPages > 0) {
+			List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
+			model.addAttribute("pageNumbers", pageNumbers);
+		}
+
+		return "listTodos";
+	}
+
+	@GetMapping(value = "/todo2")
+	public String pageListTodo(Model model,
+			@PageableDefault(value = 5, sort = { "id" }, direction = Sort.Direction.ASC) Pageable pageable) {
+		Page<TodoList> page = todoListService.findAll(pageable);
+		model.addAttribute("page", page);
+
+		return "todo2";
+
 	}
 
 }

@@ -1,10 +1,15 @@
 package com.demo.service;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,5 +43,33 @@ public class TodoListService {
 				localDate.getYear(), 
 				localDate.getMonth().getValue(),
 				localDate.getDayOfMonth());
+	}
+	
+	
+	public Page<TodoList> findPaginated(Pageable pageable) {
+		List<TodoList> todos = todoListRepository.findAll();
+
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+        List<TodoList> list;
+ 
+		if (todos.size() < startItem) {
+			list = Collections.emptyList();
+		} else {
+			int toIndex = Math.min(startItem + pageSize, todos.size());
+			list = todos.subList(startItem, toIndex);
+		}
+ 
+        Page<TodoList> todoPage
+          = new PageImpl<TodoList>(list, PageRequest.of(currentPage, pageSize), todos.size());
+ 
+     
+        return todoPage;
+        
+    }
+	
+	public Page<TodoList> findAll(Pageable pageable){
+		return todoListRepository.findAll(pageable);
 	}
 }
