@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<table border="1">
+    <thead>
+        <tr>
+            <th th:text="ID" />
+            <th th:text="Content" />
+            <th th:text="CreatedBy" />
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="todo, iStat : ${todoPage.content}"
+            th:style="${iStat.odd}? 'font-weight: bold;'"
+            th:alt-title="${iStat.even}? 'even' : 'odd'">
+            <td th:text="${todo.id}" />
+            <td th:text="${todo.content}" />
+            <td th:text="${todo.createdBy}" />
+        </tr>
+    </tbody>
+</table>
+<div th:if="${todoPage.totalPages > 0}" class="pagination"
+    th:each="pageNumber : ${pageNumbers}">
+    <a th:href="@{/listTodos(size=${todoPage.size}, page=${pageNumber})}"
+        th:text=${pageNumber}
+        th:class="${pageNumber==todoPage.number + 1} ? active"></a>
+</div>
+
+
+
+</body>
+</html>

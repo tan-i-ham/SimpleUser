@@ -69,6 +69,15 @@ public class TodoListService {
         
     }
 	
+	
+	/**
+	 * 
+	 * because JpaRepository also extends PagingAndSortingRepository, 
+	 * we can user it directly by passing the Pageable parameter
+	 * 
+	 * @param pageable
+	 * @return
+	 */
 	public Page<TodoList> findAll(Pageable pageable){
 		return todoListRepository.findAll(pageable);
 	}

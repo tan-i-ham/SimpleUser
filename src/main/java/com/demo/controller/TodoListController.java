@@ -109,11 +109,11 @@ public class TodoListController {
 	@GetMapping(value = "/todo2")
 	public String pageListTodo(Model model,
 			@PageableDefault(value = 5, sort = { "id" }, direction = Sort.Direction.ASC) Pageable pageable) {
+		
 		Page<TodoList> page = todoListService.findAll(pageable);
 		model.addAttribute("page", page);
 
 		return "todo2";
-
 	}
 
 }
