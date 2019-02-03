@@ -81,4 +81,13 @@ public class TodoListService {
 	public Page<TodoList> findAll(Pageable pageable){
 		return todoListRepository.findAll(pageable);
 	}
+	
+	/**
+	 * search current user's to-do list
+	 * @param pageable
+	 * @return
+	 */
+	public List<TodoList> findTodoByUser(String userName){
+		return todoListRepository.findByCreatedBy(userName);
+	}
 }

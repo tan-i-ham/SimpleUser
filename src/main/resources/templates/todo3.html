@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="common/header :: common_header(~{::title},~{})">
+<meta charset="UTF-8">
+<title>TodoList second try</title>
+<style>
+.active {
+	color: red;
+}
+
+.fixtb {
+	height: 500px;
+}
+
+tr {
+	height: 80px;
+}
+</style>
+</head>
+<body>
+	<div th:insert="common/header :: common_navbar"></div>
+	<div class="fixtb">
+		<table class="table table-striped table-hover tb">
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">ID</th>
+					<th scope="col">Content</th>
+					<th scope="col">Type</th>
+					<th scope="col">Created Date</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="todo : ${userTodo}">
+					<th scope="row"><input type="checkbox"
+						aria-label="done or not" th:checked="${todo.done}"></th>
+					<td th:text="${todo.id}" />
+					<td th:text="${todo.content}" />
+					<td th:text="${todo.type}" />
+					<td th:text="${todo.createdAt}" />
+				</tr>
+
+
+			</tbody>
+		</table>
+	</div>
+	<!-- footer using thymeleaf fragment -->
+	<div th:insert="~{common/footer :: footer}"></div>
+	<hr>
+	<div th:insert="common/footer :: footer"></div>
+
+
+</body>
+</html>

@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.demo.model.TodoList;
+import com.demo.model.User;
 
 public interface TodoListRepository extends JpaRepository<TodoList, Long> {
 
@@ -21,6 +22,7 @@ public interface TodoListRepository extends JpaRepository<TodoList, Long> {
 			+ "AND month(c.created_at) = ?2 AND day(c.created_at) = ?3", nativeQuery = true)
 	List<TodoList> findByCreatedYearAndMonthAndDay(int year, int month, int day);
 
+	List<TodoList> findByCreatedBy(String user);
 //	Page<TodoList> findAllPageable(Pageable pageable);
 
 }

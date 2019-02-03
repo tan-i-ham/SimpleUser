@@ -1,5 +1,6 @@
 package com.demo.controller;
 
+import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,15 +17,19 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.demo.model.TodoList;
 import com.demo.model.TodoListType;
+import com.demo.model.User;
 import com.demo.service.TodoListService;
 
 @Controller
@@ -107,13 +112,24 @@ public class TodoListController {
 	}
 
 	@GetMapping(value = "/todo2")
-	public String pageListTodo(Model model,
+	public String pageAllListTodo(Model model,
 			@PageableDefault(value = 5, sort = { "id" }, direction = Sort.Direction.ASC) Pageable pageable) {
-		
+
 		Page<TodoList> page = todoListService.findAll(pageable);
 		model.addAttribute("page", page);
 
 		return "todo2";
+	}
+
+	@GetMapping(value = "/to-do")
+	public String personalTodo(Model model, Principal principal) {	
+		String name = principal.getName(); // get logged in username
+		model.addAttribute("username", name);
+
+		List<TodoList> todoList = todoListService.findTodoByUser(name);
+		model.addAttribute("userTodo", todoList);
+
+		return "todo3";
 	}
 
 }
