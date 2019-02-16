@@ -93,7 +93,7 @@ public class TodoListController {
 	}
 
 	@GetMapping(value = "/listTodos")
-	public String listTodp(Model model, @RequestParam("page") Optional<Integer> page,
+	public String listTodo(Model model, @RequestParam("page") Optional<Integer> page,
 			@RequestParam("size") Optional<Integer> size) {
 		int currentPage = page.orElse(1);
 		int pageSize = size.orElse(5);
@@ -111,6 +111,13 @@ public class TodoListController {
 		return "listTodos";
 	}
 
+	/**
+	 * get all the todo list record (admin user can get it)
+	 * 
+	 * @param model
+	 * @param pageable
+	 * @return
+	 */
 	@GetMapping(value = "/todo2")
 	public String pageAllListTodo(Model model,
 			@PageableDefault(value = 5, sort = { "id" }, direction = Sort.Direction.ASC) Pageable pageable) {
@@ -121,13 +128,21 @@ public class TodoListController {
 		return "todo2";
 	}
 
+	/**
+	 * get the current user's todo lists
+	 * 
+	 * @param model
+	 * @param principal
+	 * @param pageable
+	 * @return
+	 */
 	@GetMapping(value = "/to-do")
-	public String personalTodo(Model model, Principal principal) {	
-		String name = principal.getName(); // get logged in username
-		model.addAttribute("username", name);
-
-		List<TodoList> todoList = todoListService.findTodoByUser(name);
-		model.addAttribute("userTodo", todoList);
+	public String personalTodo(Model model, Principal principal,
+			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.ASC) Pageable pageable) {	
+		// get logged in username
+		String name = principal.getName(); 
+		Page<TodoList> page = todoListService.findTodoByUserPageable(name, pageable);
+		model.addAttribute("page", page);
 
 		return "todo3";
 	}

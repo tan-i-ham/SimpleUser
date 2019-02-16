@@ -12,9 +12,6 @@ import com.demo.model.TodoList;
 import com.demo.model.User;
 
 public interface TodoListRepository extends JpaRepository<TodoList, Long> {
-
-//	Page<TodoList> findAll(Pageable pageable);
-
 	// custom method with a @Query annotation
 	// for using a database-independent SQL query to filter out data from the
 	// database
@@ -23,6 +20,9 @@ public interface TodoListRepository extends JpaRepository<TodoList, Long> {
 	List<TodoList> findByCreatedYearAndMonthAndDay(int year, int month, int day);
 
 	List<TodoList> findByCreatedBy(String user);
-//	Page<TodoList> findAllPageable(Pageable pageable);
+	
+	// custom methis with current username with pagination feature
+	@Query(value="select * from todo_list todo where todo.created_by= ?1", nativeQuery = true)
+	Page<TodoList> findByCreatedByPage(String user, Pageable pageable);
 
 }

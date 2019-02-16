@@ -29,8 +29,8 @@ tr{
 		</thead>
 		<tbody>
 			<tr th:each="todo, iStat : ${page.content}">
-				<th scope="row"><input type="checkbox" aria-label="done or not"
-					th:checked="${todo.done}"></th>
+				<td scope="row"><input type="checkbox" aria-label="done or not"
+					th:checked="${todo.done}"></td>
 				<td th:text="${todo.id}" />
 				<td th:text="${todo.content}" />
 				<td th:text="${todo.createdBy}" />
