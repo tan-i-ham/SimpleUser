@@ -43,7 +43,7 @@
 					<li class="nav-item"><a class="p-2 text-dark" href="/about">About</span></a></li>
 					<li class="nav-item"><a class="p-2 text-dark" href="/contact">Contact</a></li>
 					<li class="nav-item"><a class="p-2 text-dark" href="/to-do"
-						sec:authorize="isAuthenticated()">Help List</a></li>
+						sec:authorize="isAuthenticated()">Your To-Do</a></li>
 					<li class="nav-item dropdown"><a class="p-2 text-dark" href="/show"
 						sec:authorize="hasRole('ROLE_ADMIN')">All data</a></li>
 				</ul>
@@ -51,6 +51,10 @@
 			<div class="d-inline" sec:authorize="isAuthenticated()">
 				
 				<span class="navbar-text mr-2">Hi! </span> 
+				<!--  <span sec:authentication="name"> </span>-->
+				<span th:text ="${#authentication.name}"></span>
+				<span sec:authentication="principal.authorities"></span>
+				
 				<!-- <a th:href="@{/toEdit/{id}(id=${currentUser.id})}" sec:authorize="isAuthenticated()">
 				    <span class="navbar-text mr-2" th:text="${currentUser.firstname}"> firstname </span> 
 				    <span class="navbar-text mr-2" th:text="${currentUser.lastname}"> lastname </span>

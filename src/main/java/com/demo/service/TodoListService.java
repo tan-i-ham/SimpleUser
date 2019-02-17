@@ -19,7 +19,7 @@ import com.demo.repository.TodoListRepository;
 @Service
 @Transactional(readOnly = true)
 public class TodoListService {
-	private static final Logger LOGGER =  LoggerFactory.getLogger(TodoListService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TodoListService.class);
 
 	private final TodoListRepository todoListRepository;
 
@@ -32,53 +32,74 @@ public class TodoListService {
 		LOGGER.info("Saving {}", todoLists);
 		return todoListRepository.saveAll(todoLists);
 	}
-	
-	public List<TodoList> getAllTodoList(){
+
+	public List<TodoList> getAllTodoList() {
 		return todoListRepository.findAll();
 	}
 
 	public List<TodoList> getAllTodoListsForToday() {
 		LocalDate localDate = LocalDate.now();
-		return todoListRepository.findByCreatedYearAndMonthAndDay(
-				localDate.getYear(), 
-				localDate.getMonth().getValue(),
+		return todoListRepository.findByCreatedYearAndMonthAndDay(localDate.getYear(), localDate.getMonth().getValue(),
 				localDate.getDayOfMonth());
 	}
-	
-	
+
+	/**
+	 * pagination more detail way
+	 * 
+	 * @param pageable
+	 * @return
+	 */
 	public Page<TodoList> findPaginated(Pageable pageable) {
 		List<TodoList> todos = todoListRepository.findAll();
 
-        int pageSize = pageable.getPageSize();
-        int currentPage = pageable.getPageNumber();
-        int startItem = currentPage * pageSize;
-        List<TodoList> list;
- 
+		int pageSize = pageable.getPageSize();
+		int currentPage = pageable.getPageNumber();
+		int startItem = currentPage * pageSize;
+		List<TodoList> list;
+
 		if (todos.size() < startItem) {
 			list = Collections.emptyList();
 		} else {
 			int toIndex = Math.min(startItem + pageSize, todos.size());
 			list = todos.subList(startItem, toIndex);
 		}
- 
-        Page<TodoList> todoPage
-          = new PageImpl<TodoList>(list, PageRequest.of(currentPage, pageSize), todos.size());
- 
-     
-        return todoPage;
-        
-    }
-	
-	
+
+		Page<TodoList> todoPage = new PageImpl<TodoList>(list, PageRequest.of(currentPage, pageSize), todos.size());
+
+		return todoPage;
+
+	}
+
 	/**
 	 * 
-	 * because JpaRepository also extends PagingAndSortingRepository, 
-	 * we can user it directly by passing the Pageable parameter
+	 * because JpaRepository also extends PagingAndSortingRepository, we can user it
+	 * directly by passing the Pageable parameter
 	 * 
 	 * @param pageable
 	 * @return
 	 */
-	public Page<TodoList> findAll(Pageable pageable){
+	public Page<TodoList> findAll(Pageable pageable) {
 		return todoListRepository.findAll(pageable);
+	}
+
+	/**
+	 * search current user's to-do list
+	 * 
+	 * @param pageable
+	 * @return
+	 */
+	public List<TodoList> findTodoByUser(String userName) {
+		return todoListRepository.findByCreatedBy(userName);
+	}
+
+	/**
+	 * search current user's to-do list with pagination feature
+	 * 
+	 * @param name
+	 * @param pageable
+	 * @return
+	 */
+	public Page<TodoList> findTodoByUserPageable(String name, Pageable pageable) {
+		return todoListRepository.findByCreatedByPage(name, pageable);
 	}
 }
