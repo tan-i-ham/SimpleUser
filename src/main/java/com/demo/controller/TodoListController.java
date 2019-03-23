@@ -85,7 +85,7 @@ public class TodoListController {
 		if (!todoLists.isEmpty()) {
 			LOGGER.info("Saved {}", todoListService.saveAll(todoLists));
 		}
-		return "redirect:/todo";
+		return "redirect:/to-do";
 	}
 
 	private TodoList getTodoList(String todoList, TodoListType todoListType) {
