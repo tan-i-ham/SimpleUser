@@ -1,6 +1,5 @@
 package com.demo.controller;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -50,16 +49,12 @@ public class UserController {
 	 * @return
 	 */
 	@GetMapping("/")
-	public String home(Model model, @AuthenticationPrincipal UserDetails currentUser) {
+	public String home(Model model, @ModelAttribute("currentUser") User user) {
 		String returnPage = "";
 		// no user login
-		if (currentUser == null) {
+		if (user == null) {
 			returnPage = "index";
 		} else { // when some user is login
-			User user = (User) userService.findUserByUsername(currentUser.getUsername());
-			// set new attribute 'currentUser' to model, in order to show user's info on
-			// navbar
-			model.addAttribute("currentUser", user);
 			// check if this user has any prog_lan skill
 			// if not then return "index.html"
 			if (user.getProgLang() == null) {
@@ -353,6 +348,27 @@ public class UserController {
 	public String delete(Long id) {
 		userService.delete(id);
 		return "redirect:/show";
+	}
+	
+	/**
+	 * The @ModelAttribute is an annotation that binds a method parameter or method 
+	 * return value to a named model attribute and then exposes it to a web view.
+	 * will be execute before any method in this controller
+	 * 
+	 * @param model
+	 * @param currentUser
+	 */
+	@ModelAttribute
+	public void addAttributes(Model model, @AuthenticationPrincipal UserDetails currentUser) {
+		if (currentUser == null) {
+			model.addAttribute("currentUser", null);
+		}
+		else {
+			User user = (User) userService.findUserByUsername(currentUser.getUsername());
+			// set new attribute 'currentUser' to model, in order to show user's info on
+			// navbar
+			model.addAttribute("currentUser", user);
+		}
 	}
 
 }

@@ -99,7 +99,7 @@ public class TodoListService {
 	 * @param pageable
 	 * @return
 	 */
-	public Page<TodoList> findTodoByUserPageable(String name, Pageable pageable) {
-		return todoListRepository.findByCreatedByPage(name, pageable);
+	public Page<TodoList> findTodoByUsernamePageable(String username, Pageable pageable) {
+		return todoListRepository.findByCreatedByPage(username, pageable);
 	}
 }

@@ -52,13 +52,16 @@
 				
 				<span class="navbar-text mr-2">Hi! </span> 
 				<!--  <span sec:authentication="name"> </span>-->
-				<span th:text ="${#authentication.name}"></span>
-				<span sec:authentication="principal.authorities"></span>
 				
-				<!-- <a th:href="@{/toEdit/{id}(id=${currentUser.id})}" sec:authorize="isAuthenticated()">
+				<!--  <a th:href="@{/toEdit/{id}(id=${#authentication.id})}" sec:authorize="isAuthenticated()">
+				    <span th:text ="${#authentication.name}"></span>
+				    <span sec:authentication="principal.authorities"></span>    
+				</a>-->
+			
+				<a th:href="@{/toEdit/{id}(id=${currentUser.id})}" sec:authorize="isAuthenticated()">
 				    <span class="navbar-text mr-2" th:text="${currentUser.firstname}"> firstname </span> 
 				    <span class="navbar-text mr-2" th:text="${currentUser.lastname}"> lastname </span>
-				</a> -->
+				</a> 
 			</div>
 			<div class="d-inline">
 				<a class="nav-link d-inline" href="/logout" sec:authorize="isAuthenticated()">
