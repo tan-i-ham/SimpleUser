@@ -65,7 +65,7 @@ tr {
 				
 				<a href="#" class="btn btn-primary btn-lg" role="button"
 					aria-pressed="true" th:if="${page.hasPrevious()}"
-					th:href="@{/todo3(page=${page.number-1},size=${page.size})}">Previous</a>
+					th:href="@{/to-do(page=${page.number-1},size=${page.size})}">Previous</a>
 				
 					
 				<a href="#" class="btn btn-primary btn-lg" role="button"
@@ -93,7 +93,7 @@ tr {
 					
 				<a href="#" class="btn btn-primary btn-lg" role="button"
 					aria-pressed="true" th:if="${page.hasNext()}"
-					th:href="@{/todo3(page=${page.number+1},size=${page.size})}">Next</a>
+					th:href="@{/to-do(page=${page.number+1},size=${page.size})}">Next</a>
 				<!-- 	<button type="button" class="btn btn-secondary"
 					th:if="${page.number+1 lt page.totalPages}">
 					<a href="#" th:href="@{${curUrl}(page=${page.number}+1)}"
@@ -105,6 +105,7 @@ tr {
 		</div>
 
 	</div>
+	<a th:href="@{/addTodo}">add your todo</a>
 	
 	
 	<!-- footer using thymeleaf fragment -->

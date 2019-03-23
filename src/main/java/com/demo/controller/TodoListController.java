@@ -12,6 +12,7 @@ import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,18 +33,22 @@ import com.demo.model.TodoList;
 import com.demo.model.TodoListType;
 import com.demo.model.User;
 import com.demo.service.TodoListService;
+import com.demo.service.UserService;
 
 @Controller
 public class TodoListController {
 	private final static Logger LOGGER = LoggerFactory.getLogger(TodoListController.class);
 
+	@Autowired
+	UserService userService;
+	
 	private final TodoListService todoListService;
 
 	public TodoListController(TodoListService todoListService) {
 		this.todoListService = todoListService;
 	}
 
-	@GetMapping("/todo")
+	@GetMapping("/addTodo")
 	public String viewTodoPage(Model model) {
 		model.addAttribute("time", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 
@@ -54,7 +60,7 @@ public class TodoListController {
 		model.addAttribute("normalLists", groupedTodoLists.get(TodoListType.NORMAL));
 		model.addAttribute("casualLists", groupedTodoLists.get(TodoListType.CASUAL));
 
-		return "todo_list";
+		return "add-todo-list";
 
 	}
 
@@ -130,6 +136,8 @@ public class TodoListController {
 
 	/**
 	 * get the current user's todo lists
+	 * current main using page method
+	 * March, 2019
 	 * 
 	 * @param model
 	 * @param principal
@@ -138,13 +146,22 @@ public class TodoListController {
 	 */
 	@GetMapping(value = "/to-do")
 	public String personalTodo(Model model, Principal principal,
-			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.ASC) Pageable pageable) {	
+			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.ASC) Pageable pageable) {
 		// get logged in username
-		String name = principal.getName(); 
-		Page<TodoList> page = todoListService.findTodoByUserPageable(name, pageable);
+		String username = principal.getName();
+
+		Page<TodoList> page = todoListService.findTodoByUsernamePageable(username, pageable);
 		model.addAttribute("page", page);
 
-		return "todo3";
+		return "todo";
+	}
+	
+	@ModelAttribute
+	public void addAttributes(Model model, @AuthenticationPrincipal UserDetails currentUser) {
+		User user = (User) userService.findUserByUsername(currentUser.getUsername());
+		// set new attribute 'currentUser' to model, in order to show user's info on
+		// navbar
+		model.addAttribute("currentUser", user);
 	}
 
 }

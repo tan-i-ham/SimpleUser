@@ -21,8 +21,8 @@ public interface TodoListRepository extends JpaRepository<TodoList, Long> {
 
 	List<TodoList> findByCreatedBy(String user);
 	
-	// custom methis with current username with pagination feature
+	// custom method with current username with pagination feature
 	@Query(value="select * from todo_list todo where todo.created_by= ?1", nativeQuery = true)
-	Page<TodoList> findByCreatedByPage(String user, Pageable pageable);
+	Page<TodoList> findByCreatedByPage(String username, Pageable pageable);
 
 }
